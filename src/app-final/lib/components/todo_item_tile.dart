@@ -19,12 +19,16 @@ class TodoItemTile extends StatelessWidget {
     @required this.deleteDocument,
     @required this.deleteRunMutaion,
   }) : super(key: key);
+
   Map<String, Object> extractTodoData(Object data) {
     final Map<String, Object> returning =
         (data as Map<String, Object>)['action'] as Map<String, Object>;
+
     if (returning == null) {
-      return null;
+      // return null;
+      return data;
     }
+
     List<Object> list = returning['returning'];
     return list[0] as Map<String, Object>;
   }

@@ -23,7 +23,8 @@ class Dashboard extends StatelessWidget {
             client: Config.initailizeClient(snapshot.data),
             child: CacheProvider(
               child: DefaultTabController(
-                length: 3,
+                // length: 3,
+                length: 1,
                 child: Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -47,14 +48,14 @@ class Dashboard extends StatelessWidget {
                         text: "Todos",
                         icon: new Icon(Icons.edit),
                       ),
-                      Tab(
-                        text: "Feeds",
-                        icon: new Icon(Icons.message),
-                      ),
-                      Tab(
-                        text: "Online",
-                        icon: new Icon(Icons.people),
-                      ),
+                      // Tab(
+                      //   text: "Feeds",
+                      //   icon: new Icon(Icons.message),
+                      // ),
+                      // Tab(
+                      //   text: "Online",
+                      //   icon: new Icon(Icons.people),
+                      // ),
                     ],
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey,
@@ -66,8 +67,8 @@ class Dashboard extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       Todos(),
-                      Feeds(),
-                      Online(),
+                      // Feeds(),
+                      // Online(),
                     ],
                   ),
                 ),

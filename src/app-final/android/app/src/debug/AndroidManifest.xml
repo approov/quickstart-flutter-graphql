@@ -1,7 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app_final">
-    <!-- Flutter needs it to communicate with the running application
-         to allow setting breakpoints, to provide hot reload, etc.
-    -->
+  <!--  UNCOMMENT FOR APPROOV. MOVE BELOW LINE INSIDE <manifest ...>-->
+  <!--  xmlns:tools="http://schemas.android.com/tools"-->
+
+  <!--  UNCOMMENT FOR APPROOV -->
+  <!--  <application android:label="@string/app_name" tools:replace="android:label"/>-->
+
+  <!-- Flutter needs it to communicate with the running application
+       to allow setting breakpoints, to provide hot reload, etc.
+  -->
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -57,7 +57,7 @@ class _ActiveState extends State<Active> {
                 return Text('Loading');
               }
               final List<LazyCacheMap> todos =
-                  (result.data['todos'] as List<dynamic>).cast<LazyCacheMap>();
+                  (result.data['activeTodos'] as List<dynamic>).cast<LazyCacheMap>();
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {

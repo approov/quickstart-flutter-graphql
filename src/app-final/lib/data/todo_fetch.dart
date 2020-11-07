@@ -1,51 +1,54 @@
 class TodoFetch {
-  static String fetchAll = """query getTodos(\$is_public: Boolean!) {
-  todos(where: { is_public: { _eq: \$is_public} }, order_by: { created_at: desc }) {
-    __typename
-    id
-    title
-    is_completed
-  }
-}""";
-  static String fetchActive = """query getActiveTodos{
-  todos(where: {is_public: {_eq: false}, is_completed: {_eq: false}}, order_by: {created_at: desc}) {
-    __typename
-    is_completed
-    id
-    title
-  }
-  }""";
-  static String fetchCompleted = """query getCompletedTodos{
-  todos(where: {is_public: {_eq: false}, is_completed: {_eq: true}}, order_by: {created_at: desc}) {
-    __typename
-    is_completed
-    id
-    title
-  }
-  }""";
-  static String addTodo =
-      """mutation addTodo(\$title: String!, \$isPublic: Boolean!) {
-  action: insert_todos(objects: { title: \$title, is_public: \$isPublic }) {
-    returning {
-      id
-      title
+  static String fetchAll = """
+  query {
+    allTodos {
+      id,
+      title,
       is_completed
     }
   }
-}""";
-  static String toggleTodo =
-      """mutation toggleTodo(\$id:Int!, \$isCompleted: Boolean!) {
-  action: update_todos(where: {id: {_eq: \$id}}, _set: {is_completed: \$isCompleted}) {
-    returning {
+  """;
+
+  static String fetchActive = """query {
+    activeTodos {
+      id,
+      title,
       is_completed
     }
   }
-}""";
-  static String deleteTodo = """mutation delete(\$id:Int!) {
- action: delete_todos(where: {id: {_eq: \$id}}) {
-    returning {
-      id
+  """;
+
+  static String fetchCompleted = """query {
+    completedTodos {
+      id,
+      title,
+      is_completed
     }
   }
-}""";
+  """;
+
+  static String addTodo = """
+  mutation createTodo(\$title: String!, \$isPublic: Boolean!) {
+    createTodo(title: \$title, isPublic: \$isPublic) {
+      id,
+      title,
+      is_completed
+    }
+  }
+  """;
+
+  static String toggleTodo = """
+    mutation toggleTodo(\$id: Integer!, \$isCompleted: Boolean!) {
+      toggleTodo(id: \$id, isCompleted: \$isCompleted) {
+        isCompleted
+      }
+    }
+  """;
+
+  static String deleteTodo = """mutation deleteTodo(\$id:Int!) {
+      deleteTodo(id: \$id) {
+        id
+      }
+    }
+  """;
 }
