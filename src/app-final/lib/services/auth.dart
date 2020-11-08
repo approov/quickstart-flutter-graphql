@@ -15,7 +15,7 @@ class HasuraAuth {
 
     Response response = await http
       .post(
-        "${Config.httpUrl}/auth/login",
+        "${Config.apiBaseUrl}/auth/login",
         headers: {"content-type": "application/json"},
         body: jsonEncode(credentials),
       )
@@ -42,7 +42,7 @@ class HasuraAuth {
 
     Response response = await http
       .post(
-        "${Config.httpUrl}/auth/signup",
+        "${Config.apiBaseUrl}/auth/signup",
         headers: {"content-type": "application/json"},
         body: jsonEncode(credentials),
       )

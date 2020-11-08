@@ -15,19 +15,22 @@ class Config {
     if (Platform.isAndroid) {
       return '10.0.2.2:8002';
     } else {
-      return 'localhost:80002';
+      return 'localhost:8002';
     }
   }
 
-  static String get httpUrl {
-    // return localhost;
-    return 'https://flutter-graphql.demo.approov.io';
-  }
+  // COMMENT OUT FOR APPROOV
+  static String apiHost = 'unprotected.flutter-graphql.demo.approov.io';
 
-  static String get websocketUrl {
-    // return "ws://${localhost}";
-    return 'wss://flutter-graphql.demo.approov.io';
-  }
+  // UNCOMMENT FOR APPROOV
+  // static String apiHost = 'approov-token-protected.flutter-graphql.demo.approov.io';
+  // static String apiHost = 'approov-token-binding-protected.flutter-graphql.demo.approov.io';
+
+  // static String apiBaseUrl = "http://${localhost}";
+  static String apiBaseUrl = "https://${apiHost}";
+
+  // static String websocketUrl = "ws://${localhost}";
+  // static String websocketUrl = "wss://${apiHost}";
 
   // COMMENT OUT FOR APPROOV
   static final httpClient = new http.Client();
@@ -36,7 +39,7 @@ class Config {
   // static final  httpClient = ApproovClient();
 
   static final HttpLink httpLink = HttpLink(
-    uri: httpUrl,
+    uri: apiBaseUrl,
     httpClient: httpClient
   );
 

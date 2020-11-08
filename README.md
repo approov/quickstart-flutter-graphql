@@ -4,20 +4,18 @@
 
 This is an Approov integration quickstart example for a mobile app built with Flutter and using GraphQL. If you are looking for another mobile app integration you can check our list of [quickstarts](https://approov.io/docs/latest/approov-integration-examples/mobile-app/), and if you don't find what you are looking for, then please let us know [here](https://approov.io/contact).
 
+
 ## TOC
 
 * [Overview](#overview)
     + [What you will need](#what-you-will-need)
     + [What you will learn](#what-you-will-learn)
-* [Todo App](#todo-app):
-    + [Without Approov](#try-the-todo-app-without-approov)
-    + [With Approov](#enable-approov-in-the-todo-app)
 * [Approov Integration Quickstart](#approov-integration-quickstart-in-your-app)
     + [Approov Plugin Setup](#approov-plugin-setup)
     + [Approov Http Client](#approov-http-client)
     + [Mobile App Binary Registration](#mobile-app-binary-registration)
+* [Todo App Examples](/src/app-final/README.md)
 * [Next Steps](#next-steps)
-* [Credits](#credits)
 
 
 ## Overview
@@ -48,92 +46,30 @@ This is an Approov integration quickstart example for a mobile app built with Fl
 [TOC](#toc)
 
 
-## Todo App
-
-### Try the Todo App without Approov
-
-Clone this repo:
-
-```text
-git clone https://github.com/approov/quickstart-flutter-graphql-todo-app.git
-```
-
-Move inside it:
-
-```text
-cd quickstart-flutter-graphql-todo-app/src/app-final
-```
-
-Run the Flutter app:
-
-```
-flutter run
-```
-
-[TOC](#toc)
-
-### Enable Approov in the Todo App
-
-First, make sure you are inside the folder `src/app-final`:
-
-```text
-cd src/app-final
-```
-
-Now, follow the instructions for the [Approov Plugin Setup](#approov-plugin-setup), and return here when you arrive to the instruction to edit the `pubspec.yml` file.
-
-Next, while inside the `src/app-final` folder, open this files:
-
-* `pubspec.yaml`
-* `lib/config/client.dart`
-* `android/app/src/debug/AndroidManifest.xml`
-
-For each of the opened files:
-
-* Comment out the line below any occurrence of `COMMENT OUT FOR APPROOV`.
-* Uncomment the line below any occurrence of `UNCOMMENT FOR APPROOV`.
-
-Fetch your new dependencies:
-
-```text
-flutter pub get
-```
-
-Build the mobile app binary:
-
-```text
-flutter build apk --debug
-```
-
-Before you can run the Todo App you need to register the APK with the Approov Cloud Service:
-
-```text
-approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
-```
-
-Finally, run the Flutter app:
-
-```
-flutter run --no-fast-start
-```
-
-[TOC](#toc)
-
-
 ## Approov Integration Quickstart in your App
+
+The paths in this quickstart are based in the Todo App example on this Repo, thus you will need to adjust them for your project.
 
 ### Approov Plugin Setup
 
-Clone the Approov Flutter library:
+Clone the Approov Flutter plugin:
 
 ```text
 git clone https://github.com/approov/quickstart-flutter-httpclient.git src/plugins/flutter-httpclient
 ```
 
-Add the Approov SDK to the Approov plugin:
+Download the Android Approov SDK and add it to the Approov plugin:
 
 ```text
 approov sdk -getLibrary src/plugins/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
+```
+
+Do the same for iOS:
+
+```text
+approov sdk -getLibrary approov.zip
+unzip approov.zip -d src/plugins/flutter-httpclient/approovsdkflutter/ios/Classes
+rm -rf approov.zip
 ```
 
 Retrieve the `approov-initial.config` file and save it to the root of your project:
@@ -161,29 +97,93 @@ flutter:
 
 The last step is to use the Approov Http Client in your code. This is a drop in replacement for the Flutter native Http Client.
 
-Now, to use it from your GraphQL project:
+Example code for a GraphQL project:
 
 ```dart
+// similar to: src/app-final/lib/config/client.dart
+
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:approovsdkflutter/approovsdkflutter.dart';
 
-final HttpLink httpLink = HttpLink(
-    uri: 'http://10.0.2.2:8002',
-    httpClient: ApproovClient()
-);
+class PinnedHttp {
 
-final AuthLink authLink = AuthLink(
-  getToken: () async => "YOUR-AUTH-TOKEN-HERE",
-);
+  // Will be set when calling PinnedHttp.initializeClient(token)
+  static String _userAuthToken;
 
-final Link link = authLink.concat(httpLink);
+  static String apiBaseUrl = 'YOUR_API_SERVER_BASE_URL_HERE';
 
-ValueNotifier<GraphQLClient> client = ValueNotifier(
-  GraphQLClient(
-    cache: InM
-    emoryCache(),
-    link: link
-  ),
-);
+  static final approovClient = ApproovClient();
+
+  final HttpLink httpLink = HttpLink(
+      uri: apiBaseUrl,
+      httpClient: approovClient
+  );
+
+  final AuthLink authLink = AuthLink(
+    getToken: () async => _userAuthToken,
+  );
+
+  final Link link = authLink.concat(httpLink);
+
+  static ValueNotifier<GraphQLClient> initializeClient(String token) {
+      _userAuthToken = token;
+
+      ValueNotifier<GraphQLClient> client = ValueNotifier(
+        GraphQLClient(
+          cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
+          link: link,
+        ),
+      );
+
+      return client;
+  }
+}
+```
+
+> **DISCLAIMER:** The above code doesn't include a WebSocketLink because we are working in a solution that allows to secure it with Approov.
+
+Usage example for protecting the user signup/login requests with Approov:
+
+```dart
+// similar to: src/app-final/lib/services/auth.dart
+
+class UserAuth {
+  final http = PinnedHttp.approovClient;
+
+  // code omitted for brevity
+
+  Response response = await http
+    .post(
+      "${PinnedHttp.apiBaseUrl}/auth/login",
+      headers: {"content-type": "application/json"},
+      body: jsonEncode(credentials),
+    )
+    .catchError((onError) {
+      print(onError);
+      return null;
+    });
+
+  // code omitted for brevity
+
+}
+```
+
+Usage example from a Widget:
+
+```dart
+// similar to: src/app-final/lib/screens/dashboard.dart
+
+// code omitted for brevity
+
+if (snapshot.hasData) {
+  children = GraphQLProvider(
+    client: PinnedHttp.initializeClient(snapshot.data),
+
+   // code omitted for brevity
+  )
+}
 ```
 
 [TOC](#toc)
@@ -205,10 +205,12 @@ For development:
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
 ```
 
+> **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production. Read more in our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations).
+
 For a production release:
 
 ```
-approov registration -add build/app/outputs/flutter-apk/app-debug.apk
+approov registration -add build/app/outputs/flutter-apk/app.apk
 ```
 
 Always use `--no-fast-start` when restarting the Flutter app, after registering it with Approov:
@@ -236,9 +238,3 @@ This quick start guide has shown you how to integrate Approov with your existing
 
 [TOC](#toc)
 
-
-## Credits
-
-The base for this Todo app is borrowed from the [hasura/learn-graphql](https://github.com/hasura/learn-graphql/tree/c39f7731c609fb24c10a66c8ee574b4cb02f9a41/tutorials/mobile/flutter-graphql/app-final) repo, that has a [MIT license](https://github.com/hasura/learn-graphql/blob/c39f7731c609fb24c10a66c8ee574b4cb02f9a41/LICENSE), that is also on this repo. The Hasura repo is full of tutorials and examples that can be useful to start learning GraphQL or to sharp your knowledge on it.
-
-[TOC](#toc)
