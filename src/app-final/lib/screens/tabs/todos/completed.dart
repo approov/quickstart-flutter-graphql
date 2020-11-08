@@ -52,10 +52,10 @@ class _CompletedState extends State<Completed> {
                 return Text('Loading');
               }
               return ListView.builder(
-                itemCount: result.data['todos'].length,
+                itemCount: result.data['completedTodos'].length,
                 itemBuilder: (context, index) {
                   refetchQuery = refetch;
-                  dynamic responseData = result.data['todos'][index];
+                  dynamic responseData = result.data['completedTodos'][index];
                   return TodoItemTile(
                     item: TodoItem.fromElements(responseData["id"],
                         responseData['title'], responseData['is_completed']),

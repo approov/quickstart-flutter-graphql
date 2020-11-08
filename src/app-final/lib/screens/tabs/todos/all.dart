@@ -17,20 +17,20 @@ class _AllState extends State<All> {
   static GraphQLClient _client;
   runOnlineMutation(context) {
     _client = GraphQLProvider.of(context).value;
-    Future.doWhile(
-      () async {
-        _client.mutate(
-          MutationOptions(
-            documentNode: gql(OnlineFetch.updateStatus),
-            variables: {
-              'now': DateTime.now().toUtc().toIso8601String(),
-            },
-          ),
-        );
-        await Future.delayed(Duration(seconds: 30));
-        return true;
-      },
-    );
+    // Future.doWhile(
+    //   () async {
+    //     _client.mutate(
+    //       MutationOptions(
+    //         documentNode: gql(OnlineFetch.updateStatus),
+    //         variables: {
+    //           'now': DateTime.now().toUtc().toIso8601String(),
+    //         },
+    //       ),
+    //     );
+    //     await Future.delayed(Duration(seconds: 30));
+    //     return true;
+    //   },
+    // );
   }
 
   @override
@@ -67,7 +67,7 @@ class _AllState extends State<All> {
           child: Query(
             options: QueryOptions(
               documentNode: gql(TodoFetch.fetchAll),
-              variables: {"is_public": false},
+              // variables: {"is_public": false},
             ),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
@@ -79,7 +79,7 @@ class _AllState extends State<All> {
                 return Text('Loading');
               }
               final List<LazyCacheMap> todos =
-                  (result.data['todos'] as List<dynamic>).cast<LazyCacheMap>();
+                  (result.data['allTodos'] as List<dynamic>).cast<LazyCacheMap>();
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {
