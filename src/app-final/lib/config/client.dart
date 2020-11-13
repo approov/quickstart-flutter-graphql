@@ -20,11 +20,11 @@ class Config {
   }
 
   // COMMENT OUT FOR APPROOV
-  static String apiHost = 'unprotected.flutter-graphql.demo.approov.io';
+  static String apiHost = 'unprotected.phoenix-absinthe-graphql.demo.approov.io';
 
   // UNCOMMENT FOR APPROOV
-  // static String apiHost = 'approov-token-protected.flutter-graphql.demo.approov.io';
-  // static String apiHost = 'approov-token-binding-protected.flutter-graphql.demo.approov.io';
+  // static String apiHost = 'token.phoenix-absinthe-graphql.demo.approov.io';
+  // static String apiHost = 'token-binding.phoenix-absinthe-graphql.demo.approov.io';
 
   // static String apiBaseUrl = "http://${localhost}";
   static String apiBaseUrl = "https://${apiHost}";

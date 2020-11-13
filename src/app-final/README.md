@@ -10,13 +10,13 @@ The base for this Todo app is derived, with gratitude from the [hasura/learn-gra
 Clone this repo:
 
 ```text
-git clone https://github.com/approov/quickstart-flutter-graphql-todo-app.git
+git clone https://github.com/approov/quickstart-flutter-graphql.git
 ```
 
 Move inside it:
 
 ```text
-cd quickstart-flutter-graphql-todo-app/src/app-final
+cd quickstart-flutter-graphql/src/app-final
 ```
 
 Run the Flutter app:
@@ -25,7 +25,7 @@ Run the Flutter app:
 flutter run
 ```
 
-> **NOTE:** The app will run against this live backend `https://unprotected.flutter-graphql.demo.approov.io`, and the code for it is in this [Github repo](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check).
+> **NOTE:** The app will run against this live backend `https://unprotected.phoenix-absinthe-graphql.demo.approov.io`, and the code for it is in this [Github repo](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check).
 
 [TOC](/README.md#toc)
 
@@ -68,15 +68,19 @@ Before you can run the Todo App you need to register the APK with the Approov Cl
 ```text
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
 ```
-
 > **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production. Read more in our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations).
+
+The app will run against [this backend](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check), that is live at `token.phoenix-absinthe-graphql.demo.approov.io`, thus we also need to let the Approov cloud service know the API domain for it:
+
+```text
+approov api -add token.phoenix-absinthe-graphql.demo.approov.io
+```
+> **NOTE::** This command only needs to be executed the first time you register an APK with Approov.
 
 Finally, run the Flutter app:
 
 ```
 flutter run --no-fast-start
 ```
-
-> **NOTE:** The app will run against this live backend `https://approov-token-protected.flutter-graphql.demo.approov.io`, and the code for it is in this [Github repo](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check).
 
 [TOC](/README.md#toc)

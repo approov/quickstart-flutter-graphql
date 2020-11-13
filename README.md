@@ -13,6 +13,7 @@ This is an Approov integration quickstart example for a mobile app built with Fl
 * [Approov Integration Quickstart](#approov-integration-quickstart-in-your-app)
     + [Approov Plugin Setup](#approov-plugin-setup)
     + [Approov Http Client](#approov-http-client)
+    + [Mobile API Registration](#mobile-api-registration)
     + [Mobile App Binary Registration](#mobile-app-binary-registration)
 * [Todo App Examples](/src/app-final/README.md)
 * [Next Steps](#next-steps)
@@ -188,6 +189,26 @@ if (snapshot.hasData) {
 
 [TOC](#toc)
 
+
+### Mobile API Registration
+
+Approov needs to know the domain name of the API for which it will issue tokens.
+
+Add it with:
+
+```text
+approov api -add your.api.domain.com
+```
+
+> **NOTE:** This only needs to be done one time per each API, not for every time you register a mobile app binary.
+
+The Approov cloud service will not issue Approov tokens for your mobile app if you forget this step, even if the mobile app binary is registered and no tampering is detected with the binary or the environment is running on.
+
+Adding the API domain also configures the [dynamic certificate pinning](https://approov.io/docs/latest/approov-usage-documentation/#approov-dynamic-pinning) setup, out of the box. Approov Dynamic Pinning secures the communication channel between your app and your API with all the benefits of traditional pinning but without the drawbacks.
+
+> **NOTE:** By default, the pin is extracted from the public key of the leaf certificate served by the domain, as visible to the box executing the Approov CLI command and the Approov servers.
+
+[TOC](#toc)
 
 ### Mobile App Binary Registration
 
