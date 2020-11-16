@@ -237,7 +237,7 @@ approov registration -add build/app/outputs/flutter-apk/app.apk
 Always use `--no-fast-start` when restarting the Flutter app, after registering it with Approov:
 
 ```text
-flutter run --no-fast-start
+flutter run --no-build --no-fast-start
 ```
 
 [TOC](#toc)

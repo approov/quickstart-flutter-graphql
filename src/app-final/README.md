@@ -38,9 +38,12 @@ First, make sure you are inside the folder `src/app-final`:
 cd src/app-final
 ```
 
-Now, follow the instructions for the [Approov Plugin Setup](/README.md#approov-plugin-setup), and return here when you arrive to the instruction to edit the `pubspec.yml` file.
+Next, follow these instructions:
 
-Next, while inside the `src/app-final` folder, open this files:
+* Ensure you have the Approov CLI installed by typing in your terminal `approov`. If not, you can follow [these instructions](https://approov.io/docs/latest/approov-installation/) to install it.
+* [Approov Plugin Setup](/README.md#approov-plugin-setup) - follow all steps until you arrive to the step to edit the `pubspec.yml` file and then return here to continue.
+
+Now, while inside the `src/app-final` folder, open this files:
 
 * `pubspec.yaml`
 * `lib/config/client.dart`
@@ -80,7 +83,7 @@ approov api -add token.phoenix-absinthe-graphql.demo.approov.io
 Finally, run the Flutter app:
 
 ```
-flutter run --no-fast-start
+flutter run --no-build --no-fast-start
 ```
 
 [TOC](/README.md#toc)
