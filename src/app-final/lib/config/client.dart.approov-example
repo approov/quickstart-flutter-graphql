@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:http/http.dart' as http;
+import 'package:approovsdkflutter/approovsdkflutter.dart';
 
 class Config {
   static String _token;
@@ -14,7 +14,9 @@ class Config {
     }
   }
 
-  static String apiHost = 'unprotected.phoenix-absinthe-graphql.demo.approov.io';
+  // Choose one of the below endpoints:
+  static String apiHost = 'token.phoenix-absinthe-graphql.demo.approov.io';
+  // static String apiHost = 'token-binding.phoenix-absinthe-graphql.demo.approov.io';
 
   // static String apiBaseUrl = "http://${localhost}";
   static String apiBaseUrl = "https://${apiHost}";
@@ -22,7 +24,7 @@ class Config {
   // static String websocketUrl = "ws://${localhost}";
   // static String websocketUrl = "wss://${apiHost}";
 
-  static final httpClient = new http.Client();
+  static final  httpClient = ApproovClient();
 
   static final HttpLink httpLink = HttpLink(
     uri: apiBaseUrl,

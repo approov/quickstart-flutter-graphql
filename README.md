@@ -15,7 +15,7 @@ This is an Approov integration quickstart example for a mobile app built with Fl
     + [Approov Http Client](#approov-http-client)
     + [Mobile API Registration](#mobile-api-registration)
     + [Mobile App Binary Registration](#mobile-app-binary-registration)
-* [Todo App Examples](/src/app-final/README.md)
+* [Todo App Example](/src/app-final/README.md)
 * [Next Steps](#next-steps)
 
 
@@ -49,46 +49,56 @@ This is an Approov integration quickstart example for a mobile app built with Fl
 
 ## Approov Integration Quickstart in your App
 
-The paths in this quickstart are based in the Todo App example on this Repo, thus you will need to adjust them for your project.
+This quickstart is for any developer looking to integrate Approov in their own mobile app. For an hands-on ready mobile app example you can follow the [guide](/src/app-final/README.md) for the Todo app example included in this repo.
 
 ### Approov Plugin Setup
 
-Clone the Approov Flutter plugin:
+At the root of your project create a folder named `approov`:
 
 ```text
-git clone https://github.com/approov/quickstart-flutter-httpclient.git src/plugins/flutter-httpclient
+mkdir approov
 ```
+
+Clone the Approov Flutter plugin into the `approov` folder:
+
+```text
+git clone https://github.com/approov/quickstart-flutter-httpclient.git approov
+```
+> **NOTE:** The Approov Flutter plugin will be located att `your-project/approov` folder
 
 Download the Android Approov SDK and add it to the Approov plugin:
 
 ```text
-approov sdk -getLibrary src/plugins/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
+approov sdk -getLibrary approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
 ```
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `your-project/approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar`
 
 Do the same for iOS:
 
 ```text
 approov sdk -getLibrary approov.zip
-unzip approov.zip -d src/plugins/flutter-httpclient/approovsdkflutter/ios/Classes
+unzip approov.zip -d approov/flutter-httpclient/approovsdkflutter/ios
 rm -rf approov.zip
 ```
+> **NOTE:** The unzip command is unzipping the Approov library into `your-project/approov/flutter-httpclient/approovsdkflutter/ios`
 
 Retrieve the `approov-initial.config` file and save it to the root of your project:
 
 ```
 approov sdk -getConfig approov-initial.config
 ```
+> **NOTE:** The Approov initial config will be located at `your-project/approov-initial.config`
 
 Edit your `pubspec.yaml` and add the Approov SDK and the `approov-initial.config` to it:
 
 ```yml
 dependencies:
   approovsdkflutter:
-    path: ./../plugins/flutter-httpclient/approovsdkflutter
+    path: ./approov/flutter-httpclient/approovsdkflutter
 
 flutter:
   assets:
-    - approov-initial.config
+    - ./approov-initial.config
 ```
 
 [TOC](#toc)
@@ -98,7 +108,20 @@ flutter:
 
 The last step is to use the Approov Http Client in your code. This is a drop in replacement for the Flutter native Http Client.
 
-Example code for a GraphQL project:
+So, wherever you have your HttpLink defined, you should add the Approov HttpClient to it:
+
+```dart
+import 'package:approovsdkflutter/approovsdkflutter.dart';
+
+static final approovClient = ApproovClient();
+
+final HttpLink httpLink = HttpLink(
+    uri: apiBaseUrl,
+    httpClient: approovClient
+);
+```
+
+Full example code for a GraphQL project:
 
 ```dart
 // similar to: src/app-final/lib/config/client.dart
@@ -214,13 +237,13 @@ Adding the API domain also configures the [dynamic certificate pinning](https://
 
 In order to use your mobile app with Approov you need to register the mobile app binary each time you build it.
 
-First, build the mobile app:
+First, build the mobile app by hitting the correspondent button in your IDE.
 
-```text
-flutter build <YOUR-OPTIONS-AND-ARGS-HERE>
-```
+After the build is finished you can then register the resulting binary with the Approov CLI tool.
 
-For development:
+#### For Development:
+
+From the root of your project execute:
 
 ```
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
@@ -228,17 +251,22 @@ approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAf
 
 > **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production. Read more in our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations).
 
-For a production release:
+This registration step is required for each time you change your code, even if you are just commenting out a line of code or fixing a typo in a variable.
 
-```
-approov registration -add build/app/outputs/flutter-apk/app.apk
-```
+The Flutter hot reload functionality doesn't write to the disk any changes made to the code, therefore you cannot re-register the mobile app without stopping it and start it again, thus for a better development work-flow you may want to [whitelist](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-device-security-policy) your mobile device with the Approov cloud service. This way the mobile app always get valid Approov tokens without the need to re-register it for each modification made to the code.
 
-Always use `--no-fast-start` when restarting the Flutter app, after registering it with Approov:
+For example:
 
 ```text
-flutter run --no-build --no-fast-start
+approov device -add h4gubfCFzJu81j/U2BJsdg== -policy default,whitelist,all
 ```
+
+The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our docs the section [Extracting the Device ID](https://approov.io/docs/latest/approov-usage-documentation/#extracting-the-device-id) for more details how you can do it.
+
+#### For Production
+
+For a production release, you can refer to the [Managing Registration](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) section of our docs for instructions on the several methods that can be used for Android and iOS.
+
 
 [TOC](#toc)
 
