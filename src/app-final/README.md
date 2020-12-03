@@ -77,6 +77,69 @@ cp pubspec.yaml.approov-example pubspec.yaml
 cp lib/config/client.dart.approov-example lib/config/client.dart
 ```
 
+Now, open the Todo app in your IDE, from the `src/app-final` folder, and then use the correspondent button of your IDE to fetch your new dependencies, but don't build or run the Todo app yet.
+
+
+### Mobile API Registration
+
+The app will run against [this backend](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check), that is live at `token.phoenix-absinthe-graphql.demo.approov.io`, thus we also need to let the Approov cloud service know the API domain for it:
+
+```text
+approov api -add token.phoenix-absinthe-graphql.demo.approov.io
+```
+> **NOTE:** This command only needs to be executed the first time you register an APK with Approov.
+
+The Approov cloud service will not issue Approov tokens for your mobile app if you forget this step, even if the mobile app binary is registered and no tampering is detected with the binary or the environment is running on.
+
+Adding the API domain also configures the [dynamic certificate pinning](https://approov.io/docs/latest/approov-usage-documentation/#approov-dynamic-pinning) setup, out of the box. Approov Dynamic Pinning secures the communication channel between your app and your API with all the benefits of traditional pinning but without the drawbacks.
+
+> **NOTE:** By default, the pin is extracted from the public key of the leaf certificate served by the domain, as visible to the box executing the Approov CLI command and the Approov servers.
+
+If you want to run the mobile app against a backend you have control off, then you need to follow the [deployment guide](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check/blob/master/DEPLOYMENT.md) for the backend of this Todo App. Remember that this backend needs to be reachable from the Internet, otherwise, the mobile app will not get Approov tokens, because the Approov cloud service will not be able to get the pins for configuring the dynamic pinning, that you get out of the box when you integrate Approov in a mobile app.
+
+### Mobile App Binary Registration
+
+In order to use your mobile app with Approov you need to register the mobile app binary each time you build it.
+
+First, launch the Todo app by hitting the correspondent button in your IDE.
+
+> **IMPORTANT:** If you already have attempted to follow this guide, and have the Todo app installed in your device, then you **MUST** uninstall it first, because Flutter seems to preserve state from previous attempts.
+
+After the Todo app has been launched in the device it should open in the **signin/signup** screen. If not, then it means you have done previous attempts to follow this guide, and have not unisntalled the mobile app as instructed in the above **IMPORTANT** alert.
+
+Now, you can go ahead and register the resulting binary with the Approov CLI tool. For development execute from inside the `src/app-final` folder:
+
+```
+approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
+```
+> **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production.
+
+Finally, you can now use the Todo app and play with it, but you need to restart it in order for the mobile to get a valid Approov token, because in the first launch it was not yet registered with the Approov cloud service.
+
+> **NOTE:** To not have to restart the mobile app you can try to build the mobile app, then register it with Approov and then launch it, but this often leads to a failure in Approov not recognizing the mobile app as registered, because the way Flutter works it seems that in development it always build the mobile app when you hit the run button, even when no code changes had taken place, thus resulting in a different binary(maybe a timestamp is added in the build process), therefore not the same you had registered previously. This is also true for when using the `flutter` cli.
+
+For a **production release** be rest assured that you don't need to launch the mobile app, just build it and register it. Please read our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) for more details in how to proceed.
+
+
+#### Development Work-flow
+
+The registration step is required for each time you change your code, even if you are just commenting out a line of code or fixing a typo in a variable.
+
+The Flutter hot reload functionality doesn't write to the disk any changes made to the code, therefore you cannot re-register the mobile app without stopping it and start it again, thus for a better development work-flow you may want to [whitelist](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-device-security-policy) your mobile device with the Approov cloud service. This way the mobile app always get valid Approov tokens without the need to re-register it for each modification made to the code.
+
+For example:
+
+```text
+approov device -add h4gubfCFzJu81j/U2BJsdg== -policy default,whitelist,all
+```
+
+The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our docs the section [Extracting the Device ID](https://approov.io/docs/latest/approov-usage-documentation/#extracting-the-device-id) for more details how you can do it.
+
+[TOC](/README.md#toc)
+
+
+### Approov Integration Code Difference
+
 Lets's check what have changed to enable Approov in each file...
 
 For `pubspec.yml` we execute from `src/app-final`:
@@ -147,58 +210,5 @@ The output:
 ```
 
 The Git difference shows that adding Approov into an existing project is as simple as a few lines of code to add the dependency and then require and use it in the code.
-
-Now, open the Todo app in your IDE, from the `src/app-final` folder, and then use the correspondent button of your IDE to fetch your new dependencies, but don't build or run the Todo app yet.
-
-### Mobile API Registration
-
-The app will run against [this backend](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check), that is live at `token.phoenix-absinthe-graphql.demo.approov.io`, thus we also need to let the Approov cloud service know the API domain for it:
-
-```text
-approov api -add token.phoenix-absinthe-graphql.demo.approov.io
-```
-> **NOTE:** This command only needs to be executed the first time you register an APK with Approov.
-
-The Approov cloud service will not issue Approov tokens for your mobile app if you forget this step, even if the mobile app binary is registered and no tampering is detected with the binary or the environment is running on.
-
-Adding the API domain also configures the [dynamic certificate pinning](https://approov.io/docs/latest/approov-usage-documentation/#approov-dynamic-pinning) setup, out of the box. Approov Dynamic Pinning secures the communication channel between your app and your API with all the benefits of traditional pinning but without the drawbacks.
-
-> **NOTE:** By default, the pin is extracted from the public key of the leaf certificate served by the domain, as visible to the box executing the Approov CLI command and the Approov servers.
-
-If you want to run the mobile app against a backend you have control off, then you need to follow the [deployment guide](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check/blob/master/DEPLOYMENT.md) for the backend of this Todo App. Remember that this backend needs to be reachable from the Internet, otherwise, the mobile app will not get Approov tokens, because the Approov cloud service will not be able to get the pins for configuring the dynamic pinning, that you get out of the box when you integrate Approov in a mobile app.
-
-### Mobile App Binary Registration
-
-In order to use your mobile app with Approov you need to register the mobile app binary each time you build it.
-
-First, launch the Todo app by hitting the correspondent button in your IDE.
-
-> **IMPORTANT:** If you already have attempted to follow this guide, and have the Todo app installed in your device, then you **MUST** uninstall it first, because Flutter seems to preserve state from previous attempts.
-
-After the Todo app has been launched in the device you can then register the resulting binary with the Approov CLI tool.
-
-For development execute from inside the `src/app-final` folder:
-
-```
-approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
-```
-> **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production. Read more in our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations).
-
-Finally, you can now use the Todo app and play with it.
-
-
-#### Development Work-flow
-
-The registration step is required for each time you change your code, even if you are just commenting out a line of code or fixing a typo in a variable.
-
-The Flutter hot reload functionality doesn't write to the disk any changes made to the code, therefore you cannot re-register the mobile app without stopping it and start it again, thus for a better development work-flow you may want to [whitelist](https://approov.io/docs/latest/approov-usage-documentation/#adding-a-device-security-policy) your mobile device with the Approov cloud service. This way the mobile app always get valid Approov tokens without the need to re-register it for each modification made to the code.
-
-For example:
-
-```text
-approov device -add h4gubfCFzJu81j/U2BJsdg== -policy default,whitelist,all
-```
-
-The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our docs the section [Extracting the Device ID](https://approov.io/docs/latest/approov-usage-documentation/#extracting-the-device-id) for more details how you can do it.
 
 [TOC](/README.md#toc)
