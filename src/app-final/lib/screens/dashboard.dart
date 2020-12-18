@@ -1,5 +1,5 @@
 import 'package:app_final/config/client.dart';
-import 'package:app_final/screens/tabs/dashboard/feeds.dart';
+// import 'package:app_final/screens/tabs/dashboard/feeds.dart';
 import 'package:app_final/screens/tabs/dashboard/online.dart';
 import 'package:app_final/screens/tabs/dashboard/todos.dart';
 import 'package:app_final/services/shared_preferences_service.dart';
@@ -24,7 +24,7 @@ class Dashboard extends StatelessWidget {
             child: CacheProvider(
               child: DefaultTabController(
                 // length: 3,
-                length: 1,
+                length: 2,
                 child: Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -52,10 +52,10 @@ class Dashboard extends StatelessWidget {
                       //   text: "Feeds",
                       //   icon: new Icon(Icons.message),
                       // ),
-                      // Tab(
-                      //   text: "Online",
-                      //   icon: new Icon(Icons.people),
-                      // ),
+                      Tab(
+                        text: "Online",
+                        icon: new Icon(Icons.people),
+                      ),
                     ],
                     labelColor: Colors.black,
                     unselectedLabelColor: Colors.grey,
@@ -68,7 +68,10 @@ class Dashboard extends StatelessWidget {
                     children: [
                       Todos(),
                       // Feeds(),
-                      // Online(),
+                      // Container(
+                      //   child: Online(),
+                      // )
+                      Online(title: "Online Users"),
                     ],
                   ),
                 ),
