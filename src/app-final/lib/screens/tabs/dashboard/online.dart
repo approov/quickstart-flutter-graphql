@@ -11,10 +11,20 @@ class Online extends StatefulWidget {
   _OnlineUsersPageState createState() => _OnlineUsersPageState();
 }
 
+class OnlineUserItem {
+  String username = "";
+  String last_seen = "";
+
+  OnlineUserItem.fromElements(String username, String last_seen) {
+    this.username = username;
+    this.last_seen = last_seen;
+  }
+}
+
 class _OnlineUsersPageState extends State<Online> {
   final notifierKey = "fetchOnlineUsers";
 
-  List<String> onlineUsers = [];
+  Map<String, String> onlineUsers = {};
 
   final TextEditingController _textController = TextEditingController();
 
@@ -22,10 +32,6 @@ class _OnlineUsersPageState extends State<Online> {
   void initState() {
     Absinthe.connect();
     _subscribeToOnlineUsers();
-
-    setState(() {
-      onlineUsers.insert(0, "Waiting for Users to come online...");
-    });
 
     super.initState();
   }
@@ -35,13 +41,11 @@ class _OnlineUsersPageState extends State<Online> {
       this.notifierKey,
       OnlineFetch.fetchUsers,
       onResult: (payload) async {
-        print("---> PAYLOAD:");
-        print(payload['data']['fetchOnlineUsers']['name']);
 
         if (payload != null) {
           setState(() {
             // @TODO Change how we do this, because now it adds the user each he does login
-            onlineUsers.insert(0, payload['data']['fetchOnlineUsers']['name']);
+            onlineUsers[payload['data']['fetchOnlineUsers']['name']] = payload['data']['fetchOnlineUsers']['last_seen'];
           });
         }
       },
@@ -66,15 +70,15 @@ class _OnlineUsersPageState extends State<Online> {
             child: ListView.builder(
               reverse: true,
               itemBuilder: (BuildContext context, int index) {
-                print("---->> INDEX: ${index}");
-                print(onlineUsers);
+                var onlineUserIter = onlineUsers.entries;
 
                 return Card(
                     child: Column(
                       children: <Widget>[
                         ListTile(
                             leading: Icon(Icons.person),
-                            title: Text(onlineUsers[index])
+                            title: Text(onlineUserIter.elementAt(index).key),
+                            subtitle: Text("Last seen: " + onlineUserIter.elementAt(index).value),
                         ),
                       ],
                     ));

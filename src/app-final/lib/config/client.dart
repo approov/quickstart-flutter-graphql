@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:http/http.dart' as http;
-// import 'package:approovsdkflutter/approovsdkflutter.dart';
 
 class Config {
   static String httpProtocol = "https";
@@ -33,7 +32,6 @@ class Config {
   }
 
   static final httpClient = new http.Client();
-  // static final  httpClient = ApproovClient();
 
   static String get websocketUrl {
     return "${websocketProtocol}://${apiHost}/socket/websocket";
