@@ -30,7 +30,11 @@ class Config {
     return "${httpProtocol}://${host}";
   }
 
-  static final  httpClient = ApproovClient();
+  static final  httpClient = () {
+    var approovClient = ApproovClient();
+    approovClient.approovHeader = Approovsdkflutter.X_APPROOV_HEADER;
+    return approovClient;
+  }();
 
   static String get websocketUrl {
     return "${websocketProtocol}://${apiHost}/socket/websocket";
@@ -45,7 +49,7 @@ class Config {
 
   static final Link link = authLink.concat(httpLink);
 
-  static ValueNotifier<GraphQLClient> initailizeClient(String token) {
+  static ValueNotifier<GraphQLClient> initializeClient(String token) {
     auth_token = token;
     ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(

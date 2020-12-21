@@ -44,7 +44,6 @@ class _OnlineUsersPageState extends State<Online> {
 
         if (payload != null) {
           setState(() {
-            // @TODO Change how we do this, because now it adds the user each he does login
             onlineUsers[payload['data']['fetchOnlineUsers']['name']] = payload['data']['fetchOnlineUsers']['last_seen'];
           });
         }

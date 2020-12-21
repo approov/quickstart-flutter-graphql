@@ -46,7 +46,7 @@ class Config {
 
   static final Link link = authLink.concat(httpLink);
 
-  static ValueNotifier<GraphQLClient> initailizeClient(String token) {
+  static ValueNotifier<GraphQLClient> initializeClient(String token) {
     auth_token = token;
     ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(

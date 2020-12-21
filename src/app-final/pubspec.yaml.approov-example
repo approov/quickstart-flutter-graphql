@@ -23,6 +23,8 @@ dependencies:
   toast: ^0.1.5
   shared_preferences: ^0.5.7+3
   graphql_flutter: ^3.0.1
+  absinthe_socket:
+    path: ./approov/absinthe_socket
   approovsdkflutter:
     path: ./approov/flutter-httpclient/approovsdkflutter
 
@@ -33,7 +35,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

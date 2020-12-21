@@ -20,7 +20,7 @@ class Dashboard extends StatelessWidget {
         }
         if (snapshot.hasData) {
           children = GraphQLProvider(
-            client: Config.initailizeClient(snapshot.data),
+            client: Config.initializeClient(snapshot.data),
             child: CacheProvider(
               child: DefaultTabController(
                 // length: 3,

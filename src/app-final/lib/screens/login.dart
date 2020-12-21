@@ -80,7 +80,7 @@ class _LoginState extends State<Login> {
                           if (_token != null) {
                             UtilFs.showToast("Login Successful", context);
                             await sharedPreferenceService.setToken(_token);
-                            Config.initailizeClient(_token);
+                            Config.initializeClient(_token);
                             Navigator.pushReplacementNamed(
                                 context, "/dashboard");
                           } else {
