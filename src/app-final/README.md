@@ -112,6 +112,12 @@ Now, you can go ahead and register the resulting binary with the Approov CLI too
 ```
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
 ```
+
+Or for iOS by executing from `src/app-final` folder (assuming you have built an app archive, signed it and exported it to `src/app-final/Runner 2020-10-12 09-24-57/app-final.ipa):
+```
+approov registration -add Runner\ 2020-10-12\ 09-24-57/app-final.ipa --expireAfter 1h
+```
+
 > **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production.
 
 Finally, you can now use the Todo app and play with it, but you need to restart it in order for the mobile to get a valid Approov token, because in the first launch it was not yet registered with the Approov cloud service.
