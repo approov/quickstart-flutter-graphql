@@ -9,7 +9,7 @@ import 'dart:math';
 
 import 'package:websocket/websocket.dart' show WebSocket, WebSocketStatus;
 
-import 'package:approovsdkflutter/approovsdkflutter.dart';
+import 'package:approov_http_client/approov_http_client.dart';
 
 part 'crypto.dart';
 part 'http_impl.dart';
@@ -141,7 +141,7 @@ class ApproovWebSocket extends _ApproovWebSocketImpl implements WebSocket {
     {Iterable<String>/*?*/ protocols,
     Map<String, dynamic>/*?*/ headers,
     CompressionOptions compression = ApproovCompressionOptions.compressionDefault,
-    String approovHeader = Approovsdkflutter.APPROOV_HEADER}) =>
+    String approovHeader = ApproovService.APPROOV_HEADER}) =>
       _ApproovWebSocketImpl.connect(url, protocols, headers, compression: compression, approovHeader: approovHeader);
 }
 
@@ -151,6 +151,6 @@ class ApproovIOWebSocket extends _ApproovWebSocketImpl /* implements io.WebSocke
     {Iterable<String>/*?*/ protocols,
     Map<String, dynamic>/*?*/ headers,
     CompressionOptions compression = ApproovCompressionOptions.compressionDefault,
-    String approovHeader = Approovsdkflutter.APPROOV_HEADER}) =>
+    String approovHeader = ApproovService.APPROOV_HEADER}) =>
       _ApproovWebSocketImpl.connect(url, protocols, headers, compression: compression, approovHeader: approovHeader);
 }

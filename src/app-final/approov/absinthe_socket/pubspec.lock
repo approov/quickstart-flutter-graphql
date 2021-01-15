@@ -8,10 +8,10 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  approovsdkflutter:
+  approov_http_client:
     dependency: transitive
     description:
-      path: "../approovsdkflutter"
+      path: "../approov_http_client"
       relative: true
     source: path
     version: "0.0.1"

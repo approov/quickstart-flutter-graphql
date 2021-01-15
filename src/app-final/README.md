@@ -51,18 +51,18 @@ git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/f
 Download the Android Approov SDK and add it to the Approov plugin, by executing from `src/app-final` folder:
 
 ```text
-approov sdk -getLibrary approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
+approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar
 ```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app-final/approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar`
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app-final/approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar`
 
 Do the same for iOS by executing from `src/app-final` folder:
 
 ```text
 approov sdk -getLibrary approov.zip
-unzip approov.zip -d approov/flutter-httpclient/approovsdkflutter/ios
+unzip approov.zip -d approov/flutter-httpclient/approov_http_client/ios
 rm -rf approov.zip
 ```
-> **NOTE:** The unzip command is unzipping the Approov library into `src/app/final/approov/flutter-httpclient/approovsdkflutter/ios`
+> **NOTE:** The unzip command is unzipping the Approov library into `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
 
 Retrieve the `approov-initial.config` and save it into `src/app-final/approov-initial.config`. From inside the `src/app-final` folder execute:
 
@@ -161,8 +161,8 @@ The output:
    toast: ^0.1.5
    shared_preferences: ^0.5.7+3
    graphql_flutter: ^3.0.1
-+  approovsdkflutter:
-+    path: ./approov/flutter-httpclient/approovsdkflutter
++  approov_http_client:
++    path: ./approov/flutter-httpclient/approov_http_client
 
    # The following adds the Cupertino Icons font to your application.
    # Use with the CupertinoIcons class for iOS style icons.
@@ -190,7 +190,7 @@ The output:
  import 'package:flutter/material.dart';
  import 'package:graphql_flutter/graphql_flutter.dart';
 -import 'package:http/http.dart' as http;
-+import 'package:approovsdkflutter/approovsdkflutter.dart';
++import 'package:approov_http_client/approov_http_client.dart';
 
  class Config {
    static String _token;

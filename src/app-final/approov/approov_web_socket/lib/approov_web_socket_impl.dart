@@ -837,7 +837,7 @@ class _ApproovWebSocketImpl extends Stream with _ServiceObject implements io.Web
 
   static Future<io.WebSocket> connect(String url, Iterable<String>/*?*/ protocols, Map<String, dynamic>/*?*/ headers,
       {CompressionOptions compression = ApproovCompressionOptions.compressionDefault,
-      String approovHeader = Approovsdkflutter.APPROOV_HEADER}) {
+      String approovHeader = ApproovService.APPROOV_HEADER}) {
     Uri uri = Uri.parse(url);
     if (uri.scheme != "ws" && uri.scheme != "wss") {
       throw new WebSocketException("Unsupported URL scheme '${uri.scheme}'");

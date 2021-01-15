@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:phoenix_wings/src/phoenix_connection.dart';
-import 'package:approovsdkflutter/approovsdkflutter.dart';
+import 'package:approov_http_client/approov_http_client.dart';
 import 'package:approov_web_socket/approov_web_socket.dart';
 
 /// PhoenixIoConnection handles the creation and use
@@ -29,7 +29,7 @@ class PhoenixIoConnection extends PhoenixConnection {
   // waitForConnection is idempotent, it can be called many
   // times before or after the connection is established
   Future<PhoenixConnection> waitForConnection() async {
-    _connFuture ??= ApproovIOWebSocket.connect(_endpoint, approovHeader: Approovsdkflutter.X_APPROOV_HEADER);
+    _connFuture ??= ApproovIOWebSocket.connect(_endpoint, approovHeader: ApproovService.X_APPROOV_HEADER);
     _conn = await _connFuture;
 
     return this;
