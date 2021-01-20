@@ -69,18 +69,18 @@ git clone https://github.com/approov/quickstart-flutter-httpclient.git approov
 Download the Android Approov SDK and add it to the Approov plugin:
 
 ```text
-approov sdk -getLibrary approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
+approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar
 ```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `your-project/approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar`
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `your-project/approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar`
 
 Do the same for iOS:
 
 ```text
 approov sdk -getLibrary approov.zip
-unzip approov.zip -d approov/flutter-httpclient/approovsdkflutter/ios
+unzip approov.zip -d approov/flutter-httpclient/approov_http_client/ios
 rm -rf approov.zip
 ```
-> **NOTE:** The unzip command is unzipping the Approov library into `your-project/approov/flutter-httpclient/approovsdkflutter/ios`
+> **NOTE:** The unzip command is unzipping the Approov library into `your-project/approov/flutter-httpclient/approov_http_client/ios`
 
 Retrieve the `approov-initial.config` file and save it to the root of your project:
 
@@ -93,8 +93,8 @@ Edit your `pubspec.yaml` and add the Approov SDK and the `approov-initial.config
 
 ```yml
 dependencies:
-  approovsdkflutter:
-    path: ./approov/flutter-httpclient/approovsdkflutter
+  approov_http_client:
+    path: ./approov/flutter-httpclient/approov_http_client
 
 flutter:
   assets:
@@ -111,7 +111,7 @@ The last step is to use the Approov Http Client in your code. This is a drop in 
 So, wherever you have your HttpLink defined, you should add the Approov HttpClient to it:
 
 ```dart
-import 'package:approovsdkflutter/approovsdkflutter.dart';
+import 'package:approov_http_client/approov_http_client.dart';
 
 static final approovClient = ApproovClient();
 
@@ -129,7 +129,7 @@ Full example code for a GraphQL project:
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:approovsdkflutter/approovsdkflutter.dart';
+import 'package:approov_http_client/approov_http_client.dart';
 
 class PinnedHttp {
 
