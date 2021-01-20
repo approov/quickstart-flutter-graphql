@@ -36,13 +36,15 @@ All commands to execute from a terminal will assume that you are inside the `src
 cd src/app-final
 ```
 
-Now, from inside the `src/app-final` folder create the `approov` folder:
+Now, from inside the `src/app-final` folder, clone the Approov Flutter supporting packages into the `src/app-final/approov` folder, by executing from `src/app-final`:
 
 ```text
-mkdir approov
+git clone https://github.com/approov/approov-flutter-packages.git approov
 ```
 
-Clone the Approov Flutter plugin into the `src/app-final/approov` folder, by executing from `src/app-final`:
+> **NOTE:** The Approov Flutter supporting packages _must_ be cloned first, then the Approov HTTP Client package or `git clone` will fail with the error: `src/app-final/approov` directory not empty.
+
+Clone the Approov HTTP Client package into the `src/app-final/approov` folder, by executing from `src/app-final`:
 
 ```text
 git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/flutter-httpclient
@@ -148,7 +150,7 @@ The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our d
 
 Lets's check what have changed to enable Approov in each file...
 
-For `pubspec.yml` we execute from `src/app-final`:
+For `pubspec.yaml` we execute from `src/app-final`:
 
 ```text
 git diff pubspec.yaml
