@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:approovsdkflutter/approovsdkflutter.dart';
+import 'package:approov_http_client/approov_http_client.dart';
 
 class Config {
   static String httpProtocol = "https";
@@ -32,7 +32,7 @@ class Config {
 
   static final  httpClient = () {
     var approovClient = ApproovClient();
-    approovClient.approovHeader = Approovsdkflutter.X_APPROOV_HEADER;
+    approovClient.approovHeader = ApproovService.X_APPROOV_HEADER;
     return approovClient;
   }();
 

@@ -36,13 +36,15 @@ All commands to execute from a terminal will assume that you are inside the `src
 cd src/app-final
 ```
 
-Now, from inside the `src/app-final` folder create the `approov` folder:
+Now, from inside the `src/app-final` folder, clone the Approov Flutter supporting packages into the `src/app-final/approov` folder, by executing from `src/app-final`:
 
 ```text
-mkdir approov
+git clone https://github.com/approov/approov-flutter-packages.git approov
 ```
 
-Clone the Approov Flutter plugin into the `src/app-final/approov` folder, by executing from `src/app-final`:
+> **NOTE:** The Approov Flutter supporting packages _must_ be cloned first, then the Approov HTTP Client package or `git clone` will fail with the error: `src/app-final/approov` directory not empty.
+
+Clone the Approov HTTP Client package into the `src/app-final/approov` folder, by executing from `src/app-final`:
 
 ```text
 git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/flutter-httpclient
@@ -51,18 +53,18 @@ git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/f
 Download the Android Approov SDK and add it to the Approov plugin, by executing from `src/app-final` folder:
 
 ```text
-approov sdk -getLibrary approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar
+approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar
 ```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app-final/approov/flutter-httpclient/approovsdkflutter/android/approovsdk/approovsdk.aar`
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app-final/approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar`
 
 Do the same for iOS by executing from `src/app-final` folder:
 
 ```text
 approov sdk -getLibrary approov.zip
-unzip approov.zip -d approov/flutter-httpclient/approovsdkflutter/ios
+unzip approov.zip -d approov/flutter-httpclient/approov_http_client/ios
 rm -rf approov.zip
 ```
-> **NOTE:** The unzip command is unzipping the Approov library into `src/app/final/approov/flutter-httpclient/approovsdkflutter/ios`
+> **NOTE:** The unzip command is unzipping the Approov library into `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
 
 Retrieve the `approov-initial.config` and save it into `src/app-final/approov-initial.config`. From inside the `src/app-final` folder execute:
 
@@ -112,6 +114,12 @@ Now, you can go ahead and register the resulting binary with the Approov CLI too
 ```
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
 ```
+
+Or for iOS by executing from `src/app-final` folder (assuming you have built an app archive, signed it and exported it to `src/app-final/Runner 2020-10-12 09-24-57/app-final.ipa):
+```
+approov registration -add Runner\ 2020-10-12\ 09-24-57/app-final.ipa --expireAfter 1h
+```
+
 > **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production.
 
 Finally, you can now use the Todo app and play with it, but you need to restart it in order for the mobile to get a valid Approov token, because in the first launch it was not yet registered with the Approov cloud service.
@@ -142,7 +150,7 @@ The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our d
 
 Lets's check what have changed to enable Approov in each file...
 
-For `pubspec.yml` we execute from `src/app-final`:
+For `pubspec.yaml` we execute from `src/app-final`:
 
 ```text
 git diff pubspec.yaml
@@ -155,8 +163,8 @@ The output:
    toast: ^0.1.5
    shared_preferences: ^0.5.7+3
    graphql_flutter: ^3.0.1
-+  approovsdkflutter:
-+    path: ./approov/flutter-httpclient/approovsdkflutter
++  approov_http_client:
++    path: ./approov/flutter-httpclient/approov_http_client
 
    # The following adds the Cupertino Icons font to your application.
    # Use with the CupertinoIcons class for iOS style icons.
@@ -184,7 +192,7 @@ The output:
  import 'package:flutter/material.dart';
  import 'package:graphql_flutter/graphql_flutter.dart';
 -import 'package:http/http.dart' as http;
-+import 'package:approovsdkflutter/approovsdkflutter.dart';
++import 'package:approov_http_client/approov_http_client.dart';
 
  class Config {
    static String _token;
