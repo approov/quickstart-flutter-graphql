@@ -1,17 +1,17 @@
 class OnlineFetch {
+
   static String fetchUsers = """
-  subscription fetchOnlineUsers {
-  online_users {
-    user {
-      name
+  subscription { fetchOnlineUsers(topic: "online_users") {
+	  name,
+	  last_seen
+  }}
+  """;
+
+  static String updateStatus = """
+    mutation updateLastSeen (\$name: String!) {
+      updateLastSeen(name: \$name) {
+        affectedRows
+      }
     }
-  }
-}
-""";
-  static String updateStatus =
-      """ mutation updateLastSeen (\$now: timestamptz!) {
-        update_users(where: {}, _set: {last_seen: \$now}) {
-          affected_rows
-        }
-      }""";
+  """;
 }
