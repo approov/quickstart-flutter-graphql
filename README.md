@@ -23,8 +23,8 @@ This is an Approov integration quickstart example for a mobile app built with Fl
 
 ### What You Will Need
 
-* Access to either the demo account ([request access here](https://info.approov.io/demo-token)) or a trial/paid Approov account
-* The `approov` command line tool [installed](https://approov.io/docs/latest/approov-installation/) with `APPROOV_MANAGEMENT_TOKEN` set with your account access token
+* Access to a trial or paid Approov account
+* The `approov` command line tool [installed](https://approov.io/docs/latest/approov-installation/) with access to your account
 * Flutter installed. This quickstart uses version:
 
   ```text
