@@ -60,11 +60,9 @@ approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/a
 Do the same for iOS by executing from `src/app-final` folder:
 
 ```text
-approov sdk -getLibrary approov.zip
-unzip approov.zip -d approov/flutter-httpclient/approov_http_client/ios
-rm -rf approov.zip
+approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/ios/approov.xcframework
 ```
-> **NOTE:** The unzip command is unzipping the Approov library into `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
 
 Retrieve the `approov-initial.config` and save it into `src/app-final/approov-initial.config`. From inside the `src/app-final` folder execute:
 
@@ -79,7 +77,7 @@ cp pubspec.yaml.approov-example pubspec.yaml
 cp lib/config/client.dart.approov-example lib/config/client.dart
 ```
 
-Now, open the Todo app in your IDE, from the `src/app-final` folder, and then use the correspondent button of your IDE to fetch your new dependencies, but don't build or run the Todo app yet.
+Finally, open the Todo app in your IDE, from the `src/app-final` folder, and then use the correspondent button of your IDE to fetch your new dependencies, but don't build or run the Todo app yet.
 
 
 ### Mobile API Registration
@@ -111,13 +109,16 @@ After the Todo app has been launched in the device it should open in the **signi
 
 Now, you can go ahead and register the resulting binary with the Approov CLI tool. For development execute from inside the `src/app-final` folder:
 
-```
+For Android:
+
+```text
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk --expireAfter 1h
 ```
 
-Or for iOS by executing from `src/app-final` folder (assuming you have built an app archive, signed it and exported it to `src/app-final/Runner 2020-10-12 09-24-57/app-final.ipa):
-```
-approov registration -add Runner\ 2020-10-12\ 09-24-57/app-final.ipa --expireAfter 1h
+For iOS: It is necessary to build an app archive (.ipa extension) and export it to a convenient location, for example the `quickstart-flutter-graphql` directory. Install the app's .ipa on the device in order to ensure that the installed version and the registered version are the same. Assuming you have built an app archive, signed it and exported it to `quickstart-flutter-graphql/Runner\ 2021-02-04\ 14-27-30/app-final.ipa`, the registration command is:
+
+```text
+approov registration -add ../../Runner\ 2021-02-04\ 14-27-30/app-final.ipa --expireAfter 1h
 ```
 
 > **IMPORTANT:** During development always use the `--expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production.
@@ -126,7 +127,7 @@ Finally, you can now use the Todo app and play with it, but you need to restart 
 
 > **NOTE:** To not have to restart the mobile app you can try to build the mobile app, then register it with Approov and then launch it, but this often leads to a failure in Approov not recognizing the mobile app as registered, because the way Flutter works it seems that in development it always build the mobile app when you hit the run button, even when no code changes had taken place, thus resulting in a different binary(maybe a timestamp is added in the build process), therefore not the same you had registered previously. This is also true for when using the `flutter` cli.
 
-For a **production release** be rest assured that you don't need to launch the mobile app, just build it and register it. Please read our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) for more details in how to proceed.
+For a **production release** rest assured that you don't need to launch the mobile app, just build it and register it. Please read our docs at [Managing Registrations](https://approov.io/docs/latest/approov-usage-documentation/#managing-registrations) for more details in how to proceed.
 
 
 #### Development Work-flow
@@ -156,65 +157,10 @@ For `pubspec.yaml` we execute from `src/app-final`:
 git diff pubspec.yaml
 ```
 
-The output:
-
-```text
-@@ -23,6 +23,8 @@ dependencies:
-   toast: ^0.1.5
-   shared_preferences: ^0.5.7+3
-   graphql_flutter: ^3.0.1
-+  approov_http_client:
-+    path: ./approov/flutter-httpclient/approov_http_client
-
-   # The following adds the Cupertino Icons font to your application.
-   # Use with the CupertinoIcons class for iOS style icons.
-@@ -39,6 +41,9 @@ dev_dependencies:
- # The following section is specific to Flutter.
- flutter:
-
-+ assets:
-+   - ./approov-initial.config
-+
-   # The following line ensures that the Material Icons font is
-```
-
 Next, lets check the `client.dart` file by executing from the `src/app-final` folder:
 
 ```text
 git diff lib/config/client.dart
-```
-
-The output:
-
-```text
-@@ -1,7 +1,7 @@
- import 'dart:io';
- import 'package:flutter/material.dart';
- import 'package:graphql_flutter/graphql_flutter.dart';
--import 'package:http/http.dart' as http;
-+import 'package:approov_http_client/approov_http_client.dart';
-
- class Config {
-   static String _token;
-@@ -14,7 +14,9 @@ class Config {
-     }
-   }
-
--  static String apiHost = 'unprotected.phoenix-absinthe-graphql.demo.approov.io';
-+  // Choose one of the below endpoints:
-+  static String apiHost = 'token.phoenix-absinthe-graphql.demo.approov.io';
-+  // static String apiHost = 'token-binding.phoenix-absinthe-graphql.demo.approov.io';
-
-   // static String apiBaseUrl = "http://${localhost}";
-   static String apiBaseUrl = "https://${apiHost}";
-@@ -22,7 +24,7 @@ class Config {
-   // static String websocketUrl = "ws://${localhost}";
-   // static String websocketUrl = "wss://${apiHost}";
-
--  static final httpClient = new http.Client();
-+  static final  httpClient = ApproovClient();
-
-   static final HttpLink httpLink = HttpLink(
 ```
 
 The Git difference shows that adding Approov into an existing project is as simple as a few lines of code to add the dependency and then require and use it in the code.
