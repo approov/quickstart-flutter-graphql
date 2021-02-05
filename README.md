@@ -66,7 +66,7 @@ git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/f
 ```
 > **NOTE:** The Approov Flutter plugin will be located at `your-project/approov` folder
 
-Download the Android Approov SDK and add it to the Approov plugin:
+Download the Android Approov SDK and add it to the Approov HTTP Client plugin:
 
 ```text
 approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar
@@ -78,7 +78,7 @@ Do the same for iOS:
 ```text
 approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/ios/approov.xcframework
 ```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
+> **NOTE:** The approov command is downloading the Approov SDK into the folder `your-project/approov/flutter-httpclient/approov_http_client/ios`
 
 Retrieve the `approov-initial.config` file and save it to the root of your project:
 
