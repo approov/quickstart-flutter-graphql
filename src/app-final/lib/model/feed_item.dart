@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class FeedItem {
   String id = "";
   String username = "";

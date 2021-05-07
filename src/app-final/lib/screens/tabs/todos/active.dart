@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/components/add_task.dart';
 import 'package:app_final/components/todo_item_tile.dart';
 import 'package:app_final/data/todo_fetch.dart';
@@ -22,8 +24,8 @@ class _ActiveState extends State<Active> {
       children: <Widget>[
         Mutation(
           options: MutationOptions(
-            documentNode: gql(TodoFetch.addTodo),
-            update: (Cache cache, QueryResult result) {
+            document: gql(TodoFetch.addTodo),
+            update: (GraphQLDataProxy cache, QueryResult result) {
               return cache;
             },
             onCompleted: (dynamic resultData) {
@@ -45,7 +47,7 @@ class _ActiveState extends State<Active> {
         Expanded(
           child: Query(
             options: QueryOptions(
-              documentNode: gql(TodoFetch.fetchActive),
+              document: gql(TodoFetch.fetchActive),
             ),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
@@ -53,11 +55,11 @@ class _ActiveState extends State<Active> {
               if (result.hasException) {
                 return Text(result.exception.toString());
               }
-              if (result.loading) {
+              if (result.isLoading) {
                 return Text('Loading');
               }
-              final List<LazyCacheMap> todos =
-                  (result.data['activeTodos'] as List<dynamic>).cast<LazyCacheMap>();
+              final List<GraphQLCache> todos =
+                  (result.data['activeTodos'] as List<dynamic>).cast<GraphQLCache>();
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {

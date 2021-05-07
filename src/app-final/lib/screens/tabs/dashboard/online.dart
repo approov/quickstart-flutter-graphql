@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/config/absinthe_socket.dart';
 import 'package:app_final/data/online_fetch.dart';
 import 'package:flutter/material.dart';

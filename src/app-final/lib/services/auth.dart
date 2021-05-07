@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:convert';
 import 'package:app_final/config/client.dart';
 import 'package:http/http.dart';
@@ -15,7 +17,7 @@ class HasuraAuth {
 
     Response response = await http
       .post(
-        "${Config.apiBaseUrl}/auth/login",
+        Uri.parse("${Config.apiBaseUrl}/auth/login"),
         headers: {"content-type": "application/json"},
         body: jsonEncode(credentials),
       )
@@ -42,7 +44,7 @@ class HasuraAuth {
 
     Response response = await http
       .post(
-        "${Config.apiBaseUrl}/auth/signup",
+        Uri.parse("${Config.apiBaseUrl}/auth/signup"),
         headers: {"content-type": "application/json"},
         body: jsonEncode(credentials),
       )
