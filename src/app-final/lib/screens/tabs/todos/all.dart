@@ -80,8 +80,9 @@ class _AllState extends State<All> {
               if (result.isLoading) {
                 return Text('Loading');
               }
-              final List<GraphQLCache> todos =
-                  (result.data['allTodos'] as List<dynamic>).cast<GraphQLCache>();
+
+              final List<Object> todos = result.data['allTodos'];
+
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {

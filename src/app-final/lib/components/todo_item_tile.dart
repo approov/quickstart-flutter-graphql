@@ -73,8 +73,8 @@ class TodoItemTile extends StatelessWidget {
                     '''
                       fragment fields on Repository {
                         id
-                        name
-                        viewerHasStarred
+                        title
+                        is_completed
                       }
                     ''',),).asRequest(idFields: {
                       '__typename': updated['__typename'],

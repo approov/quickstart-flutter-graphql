@@ -58,8 +58,9 @@ class _ActiveState extends State<Active> {
               if (result.isLoading) {
                 return Text('Loading');
               }
-              final List<GraphQLCache> todos =
-                  (result.data['activeTodos'] as List<dynamic>).cast<GraphQLCache>();
+
+              final List<Object> todos = result.data['activeTodos'];
+
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {
