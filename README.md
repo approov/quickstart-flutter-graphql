@@ -29,10 +29,10 @@ This is an Approov integration quickstart example for a mobile app built with Fl
 
   ```text
   flutter --version
-  Flutter 1.22.2 • channel stable • https://github.com/flutter/flutter.git
-  Framework • revision 84f3d28555 (3 weeks ago) • 2020-10-15 16:26:19 -0700
-  Engine • revision b8752bbfff
-  Tools • Dart 2.10.2
+  Flutter 2.0.6 • channel stable • https://github.com/flutter/flutter.git
+  Framework • revision 1d9032c7e1 (12 days ago) • 2021-04-29 17:37:58 -0700
+  Engine • revision 05e680e202
+  Tools • Dart 2.12.3
   ```
 
 [TOC](#toc)
