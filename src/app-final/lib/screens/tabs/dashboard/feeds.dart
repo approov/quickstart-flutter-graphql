@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/components/custom_button.dart';
 import 'package:app_final/components/feed_tile.dart';
 import 'package:app_final/data/feed_fetch.dart';

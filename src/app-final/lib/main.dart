@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/screens/dashboard.dart';
 import 'package:app_final/screens/login.dart';
 import 'package:app_final/screens/signup.dart';

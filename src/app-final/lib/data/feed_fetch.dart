@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class FeedFetch {
   static String fetchNewNotification = """subscription fetchNewNotification {
   todos(where: {is_public: {_eq: true}}, limit: 1, order_by: {created_at: desc}) {

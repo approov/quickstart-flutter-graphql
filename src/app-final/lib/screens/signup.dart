@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/components/custom_button.dart';
 import 'package:app_final/components/utils.dart';
 import 'package:app_final/services/auth.dart';

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/components/add_task.dart';
 import 'package:app_final/components/todo_item_tile.dart';
 import 'package:app_final/data/todo_fetch.dart';
@@ -21,7 +23,7 @@ class _CompletedState extends State<Completed> {
       children: <Widget>[
         Mutation(
           options: MutationOptions(
-            documentNode: gql(TodoFetch.addTodo),
+            document: gql(TodoFetch.addTodo),
             onCompleted: (dynamic resultData) {
               refetchQuery();
             },
@@ -41,14 +43,14 @@ class _CompletedState extends State<Completed> {
         Expanded(
           child: Query(
             options: QueryOptions(
-              documentNode: gql(TodoFetch.fetchCompleted),
+              document: gql(TodoFetch.fetchCompleted),
             ),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
               if (result.hasException) {
                 return Text(result.exception.toString());
               }
-              if (result.loading) {
+              if (result.isLoading) {
                 return Text('Loading');
               }
               return ListView.builder(

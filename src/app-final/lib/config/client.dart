@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -38,7 +40,7 @@ class Config {
   }
 
   static final HttpLink httpLink = HttpLink(
-      uri: apiBaseUrl,
+      apiBaseUrl,
       httpClient: httpClient
   );
 
@@ -50,7 +52,7 @@ class Config {
     auth_token = token;
     ValueNotifier<GraphQLClient> client = ValueNotifier(
       GraphQLClient(
-        cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
+        cache: GraphQLCache(),
         link: link,
       ),
     );

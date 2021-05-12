@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app_final/components/add_task.dart';
 import 'package:app_final/components/todo_item_tile.dart';
 import 'package:app_final/data/online_fetch.dart';
@@ -47,7 +49,7 @@ class _AllState extends State<All> {
       children: <Widget>[
         Mutation(
           options: MutationOptions(
-            documentNode: gql(TodoFetch.addTodo),
+            document: gql(TodoFetch.addTodo),
             onCompleted: (dynamic resultData) {
               refetchQuery();
             },
@@ -66,7 +68,7 @@ class _AllState extends State<All> {
         Expanded(
           child: Query(
             options: QueryOptions(
-              documentNode: gql(TodoFetch.fetchAll),
+              document: gql(TodoFetch.fetchAll),
               // variables: {"is_public": false},
             ),
             builder: (QueryResult result,
@@ -75,11 +77,12 @@ class _AllState extends State<All> {
               if (result.hasException) {
                 return Text(result.exception.toString());
               }
-              if (result.loading) {
+              if (result.isLoading) {
                 return Text('Loading');
               }
-              final List<LazyCacheMap> todos =
-                  (result.data['allTodos'] as List<dynamic>).cast<LazyCacheMap>();
+
+              final List<Object> todos = result.data['allTodos'];
+
               return ListView.builder(
                 itemCount: todos.length,
                 itemBuilder: (context, index) {

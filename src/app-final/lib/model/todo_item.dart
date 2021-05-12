@@ -1,3 +1,5 @@
+// @dart=2.9
+
 class TodoItem {
   int id;
   String task = "";
