@@ -76,7 +76,7 @@ approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/a
 Do the same for iOS:
 
 ```text
-approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/ios/approov.xcframework
+approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/ios/Approov.xcframework
 ```
 > **NOTE:** The approov command is downloading the Approov SDK into the folder `your-project/approov/flutter-httpclient/approov_http_client/ios`
 
