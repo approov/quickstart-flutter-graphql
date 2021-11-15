@@ -33,8 +33,9 @@ class Config {
   }
 
   static final  httpClient = () {
-    var approovClient = ApproovClient();
-    approovClient.approovHeader = ApproovService.X_APPROOV_HEADER;
+    var approovClient = ApproovClient('<enter your config here>');
+    // We use a custom header
+    approovClient.approovHeader("X_APPROOV_HEADER");
     return approovClient;
   }();
 
