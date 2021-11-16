@@ -4,6 +4,14 @@ This is an Approov integration quickstart example for a Todo mobile app built wi
 
 The base for this Todo app is derived, with gratitude from the [hasura/learn-graphql](https://github.com/hasura/learn-graphql/tree/c39f7731c609fb24c10a66c8ee574b4cb02f9a41/tutorials/mobile/flutter-graphql/app-final) repo, that has a [MIT license](https://github.com/hasura/learn-graphql/blob/c39f7731c609fb24c10a66c8ee574b4cb02f9a41/LICENSE), that is also on this repo. The Hasura repo is full of tutorials and examples that can be useful to start learning GraphQL or to sharpen your knowledge on it.
 
+## WHAT YOU WILL NEED
+* Access to a trial or paid Approov account
+* The `approov` command line tool [installed](https://approov.io/docs/latest/approov-installation/) with access to your account
+* [Android Studio](https://developer.android.com/studio) installed (version ArticFox 2020.3.1 is used in this guide) if you will build the Android app
+* [Xcode](https://developer.apple.com/xcode/) installed (version 13.0 is used in this guide) to build iOS version of application
+* [Cocoapods](https://cocoapods.org) installed to support iOS building (1.11.2 used in this guide)
+* [Flutter](https://flutter.dev) version 2.5.3 used in this guide with Dart 2.14.4
+* The contents of this repo
 
 ## Try the Todo App without Approov
 
@@ -21,60 +29,77 @@ Finally, you can build and run the Flutter Todo App by hitting the correspondent
 
 > **NOTE:** The app will run against this live backend `https://unprotected.phoenix-absinthe-graphql.demo.approov.io`, and the code for it is in this [Github repo](https://github.com/approov/quickstart-elixir-phoenix-absinthe-graphql-token-check).
 
-[TOC](/README.md#toc)
+### iOS Potential Issues
 
+If the iOS build fails with an error related to `Pods-Runner` then navigate inside `ios` folder using `cd ios` and run `pod install`.
 
-## Enable Approov in the Todo App
+If the iOS build fails with a signing error, open the Xcode project located in `ios/Runner.xcworkspace`:
 
-First, ensure you have the Approov CLI installed by typing in your terminal `approov`. If not, you can follow [these instructions](https://approov.io/docs/latest/approov-installation/) to install it.
-
-### Approov Plugin Setup
-
-All commands to execute from a terminal will assume that you are inside the `src/app-final` folder, thus make sure you are inside it:
-
-```text
-cd src/app-final
+```
+$ open ios/Runner.xcworkspace
 ```
 
-Now, from inside the `src/app-final` folder, clone the Approov Flutter supporting packages into the `src/app-final/approov` folder, by executing from `src/app-final`:
+and select your code signing team in the _Signing & Capabilities_ section of the project.
 
-```text
-git clone https://github.com/approov/approov-flutter-packages.git approov
+Also ensure you modify the app's `Bundle Identifier` so it contains a unique string (you can simply append your company name). This is to avoid Apple rejecting a duplicate `Bundle Identifier` when code signing is performed. Then return to the shell and repeat the failed build step.
+
+Please also verify the minimum iOS supported version is set to `iOS 10` if there is a supported version mismatch error.
+
+### Android Potential Issues
+If the Android build fails with `Manifest merger failed : Attribute application@label value=([...]) from AndroidManifest.xml:11:9-46 is also present at [approov-sdk.aar] AndroidManifest.xml:12:9-41 value=(@string/app_name)`, then open `android/app/src/main/AndroidManifest.xml` in an editor and make the following changes.
+
+- Add the schema as an attribute in the `manifest` tag:
+
+```
+    <manifest ...
+        xmlns:tools="http://schemas.android.com/tools"
+        ... >
+```
+- Add the `android:label` and `tools` attributes to the `application` tag:
+```
+    <application ...
+        android:label="@string/app_name"
+        tools:replace="label"
+        ... >
 ```
 
-> **NOTE:** The Approov Flutter supporting packages _must_ be cloned first, then the Approov HTTP Client package or `git clone` will fail with the error: `src/app-final/approov` directory not empty.
+## Adding APPROOV Support
 
-Clone the Approov HTTP Client package into the `src/app-final/approov` folder, by executing from `src/app-final`:
+Approov protection is provided through the `approov_service_flutter_httpclient` plugin for both, Android and iOS mobile platforms. This plugin handles all Approov related functionality, such as downloading and instalation of Approov SDK library, initialization, managing of initial and update configurations, fetching of Approov tokens, adding these to API requests as necessary, and manages certificate public key pinning. The plugin also requests all necessary network permissions.
 
-```text
-git clone https://github.com/approov/quickstart-flutter-httpclient.git approov/flutter-httpclient
+The `Absinthe` support is located in the [approov-flutter-packages](https://github.com/approov/approov-flutter-packages.git) repository and is automatically installed by replacing the original `pubspec.yaml` file with the modified `pubspec.yaml.approov-example`. Using the shell from the directory `quickstart-flutter-graphql/src/app-final`:
+
+```Bash
+cp pubspec.yaml.approov-example pubspec.yaml
 ```
 
-Download the Android Approov SDK and add it to the Approov plugin, by executing from `src/app-final` folder:
+Now you need to link the ApproovSDK to your account. This requires editing two files and replacing the originals. Edit the file `quickstart-flutter-graphql/src/app-final/lib/config/client.dart.approov-example` by finding the line that contains:
 
-```text
-approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar
-```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app-final/approov/flutter-httpclient/approov_http_client/android/approov-sdk.aar`
-
-Do the same for iOS by executing from `src/app-final` folder:
-
-```text
-approov sdk -getLibrary approov/flutter-httpclient/approov_http_client/ios/Approov.xcframework
-```
-> **NOTE:** The approov command is downloading the Approov SDK into the folder `src/app/final/approov/flutter-httpclient/approov_http_client/ios`
-
-Retrieve the `approov-initial.config` and save it into `src/app-final/approov-initial.config`. From inside the `src/app-final` folder execute:
-
-```text
-approov sdk -getConfig approov-initial.config
+```Dart
+var approovClient = ApproovClient('<enter your config here>');
 ```
 
-Time to enable Approov, by replacing two files, and we do this by executing from `src/app-final`:
+The `<enter-your-config-string-here>` is a custom string that configures your Approov account access. This will have been provided in your Approov onboarding email.
 
-```text
+Now edit the file `quickstart-flutter-graphql/src/app-final/lib/config/absinthe_socket.dart.approov-example` and locate this line:
+
+```Dart
+_socket = AbsintheSocket(
+      Config.websocketUrl,
+      "<your config string here>",
+      socketOptions: AbsintheSocketOptions(
+          params: {"Authorization": Config.auth_token}),
+    );
+```
+
+The `<enter-your-config-string-here>` needs to be replaced by the string you obtained during account registration.
+
+Now replace the files from the command line:
+
+```Bash
 cp pubspec.yaml.approov-example pubspec.yaml
 cp lib/config/client.dart.approov-example lib/config/client.dart
+cp lib/config/absinthe_socket.dart.approov-example lib/config/absinthe_socket.dart
 ```
 
 Finally, open the Todo app in your IDE, from the `src/app-final` folder, and then use the correspondent button of your IDE to fetch your new dependencies, but don't build or run the Todo app yet.
@@ -146,23 +171,3 @@ The value `h4gubfCFzJu81j/U2BJsdg==` is the device id, and you can read on our d
 
 [TOC](/README.md#toc)
 
-
-### Approov Integration Code Difference
-
-Lets's check what have changed to enable Approov in each file...
-
-For `pubspec.yaml` we execute from `src/app-final`:
-
-```text
-git diff pubspec.yaml
-```
-
-Next, lets check the `client.dart` file by executing from the `src/app-final` folder:
-
-```text
-git diff lib/config/client.dart
-```
-
-The Git difference shows that adding Approov into an existing project is as simple as a few lines of code to add the dependency and then require and use it in the code.
-
-[TOC](/README.md#toc)
