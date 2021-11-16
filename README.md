@@ -166,6 +166,7 @@ class PinnedHttp {
       return client;
   }
 }
+```
 
 ## Checking it Works
 
