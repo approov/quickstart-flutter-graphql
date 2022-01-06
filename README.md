@@ -41,8 +41,8 @@ and two implementation dependecies:
 
 ```gradle
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
-    implementation 'com.github.approov:approov-android-sdk:2.7.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.github.approov:approov-android-sdk:2.9.0'
 }
 ```
 
