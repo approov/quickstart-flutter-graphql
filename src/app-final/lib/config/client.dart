@@ -3,7 +3,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+
+// COMMENT LINE BELOW IF USING APPROOV
 import 'package:http/http.dart' as http;
+
+// UNCOMMENT LINE BELOW IF USING APPROOV
+//import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
 
 class Config {
   static String httpProtocol = "https";
@@ -23,8 +28,12 @@ class Config {
   }
 
   // Choose one of the below endpoints:
+  // IF RUNNING GRAPHQL SERVER LOCALLY
   // static String apiHost = localhost;
+  // IF USING THE UNPROTECTED GRAPHQL SERVER BEFORE ADDING APPROOV
   static String apiHost = 'unprotected.phoenix-absinthe-graphql.demo.approov.io';
+  // IF USING THE PROTECTED GRAPHQL SERVER WHEN USING APPROOV
+  //static String apiHost = 'token.phoenix-absinthe-graphql.demo.approov.io';
 
   static String get apiBaseUrl {
     // We need to call apiHost first, otherwise we get https in localhost.
@@ -33,7 +42,16 @@ class Config {
     return "${httpProtocol}://${host}";
   }
 
+  // COMMENT LINE BELOW IF USING APPROOV
   static final httpClient = new http.Client();
+
+  // UNCOMMENT LINES BELOW IF USING APPROOV
+  /*static final  httpClient = () {
+    var approovClient = ApproovClient('<enter your config here>');
+    // We use a custom header rather than just "Approov-Token"
+    ApproovService.setApproovHeader("X_APPROOV_HEADER", "");
+    return approovClient;
+  }();*/
 
   static String get websocketUrl {
     return "${websocketProtocol}://${apiHost}/socket/websocket";

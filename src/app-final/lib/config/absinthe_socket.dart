@@ -18,6 +18,8 @@ class Absinthe {
 
     _socket = AbsintheSocket(
       Config.websocketUrl,
+      // UNCOMMENT LINE BELOW WHEN USING APPROOV
+      //"<your config string here>",
       socketOptions: AbsintheSocketOptions(
           params: {"Authorization": Config.auth_token}),
     );
