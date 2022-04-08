@@ -46,10 +46,10 @@ class Config {
   static final httpClient = new http.Client();
 
   // UNCOMMENT LINES BELOW IF USING APPROOV
-  /*static final  httpClient = () {
+  /*static final httpClient = () {
     var approovClient = ApproovClient('<enter your config here>');
-    // We use a custom header rather than just "Approov-Token"
-    ApproovService.setApproovHeader("X_APPROOV_HEADER", "");
+    // We use a custom header "X-Approov-Token" rather than just "Approov-Token"
+    ApproovService.setApproovHeader("X-Approov-Token", "");
     return approovClient;
   }();*/
 
