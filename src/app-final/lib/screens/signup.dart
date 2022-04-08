@@ -53,8 +53,8 @@ class _SignupState extends State<Signup> {
                         controller: passwordController,
                         decoration: InputDecoration(labelText: "Password"),
                         validator: (value) {
-                          return value.length < 4
-                              ? "Password must be at least 4 characters long"
+                          return value.length < 8
+                              ? "Password must be at least 8 characters long"
                               : null;
                         },
                         obscureText: true,
