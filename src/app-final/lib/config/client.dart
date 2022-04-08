@@ -36,9 +36,7 @@ class Config {
   //static String apiHost = 'token.phoenix-absinthe-graphql.demo.approov.io';
 
   static String get apiBaseUrl {
-    // We need to call apiHost first, otherwise we get https in localhost.
     String host = apiHost;
-
     return "${httpProtocol}://${host}";
   }
 
