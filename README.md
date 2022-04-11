@@ -19,13 +19,13 @@ approov_service_flutter_httpclient:
   git: https://github.com/approov/approov-service-flutter-httpclient.git
 ```
 
-Note that this creates a dependency on the latest version of the `approov-service-flutter-httpclient`, as do the dependencies in `approov-flutter-packages`. If you wish to create a dependency on a fixed tagged version you can use a syntax such as tehe following:
+Note that this creates a dependency on the latest version of the `approov-service-flutter-httpclient`, as do the dependencies in `approov-flutter-packages`. If you wish to create a dependency on a fixed tagged version you can use a syntax such as the following:
 
 ```yaml
 approov_service_flutter_httpclient:
   git:
     url: https://github.com/approov/approov-service-flutter-httpclient.git
-    ref: 3.0.0
+    ref: 3.0.1
 ```
 
 You will need to fork the `approov-flutter-packages` if you wish to fix their dependency to a specific tag.
@@ -66,9 +66,45 @@ pod install
 
 in the directory containing the ios project files.
 
-## INITIALIZING AND USING THE ABSINTHESOCKET
+### USING APPROOV FOR GRAPHQL REQUESTS
 
-You need to instantiate the `AbsintheSocket` with an additional parameter:
+Approov provides a drop in replacement for the Flutter native Http Client. Here is an example of how it can be used in initialization for a the GraphQL client in the `HttpLink`:
+
+```Dart
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
+
+static String _userAuthToken;
+static String apiBaseUrl = 'YOUR_API_SERVER_BASE_URL_HERE';
+static final approovClient = ApproovClient('<enter-your-config-string-here>');
+final HttpLink httpLink = HttpLink(
+    uri: apiBaseUrl,
+    httpClient: approovClient
+);
+final AuthLink authLink = AuthLink(
+  getToken: () async => _userAuthToken,
+);
+final Link link = authLink.concat(httpLink);
+
+static ValueNotifier<GraphQLClient> initializeClient(String token) {
+    _userAuthToken = token;
+    ValueNotifier<GraphQLClient> client = ValueNotifier(
+      GraphQLClient(
+        cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
+        link: link,
+      ),
+    );
+    return client;
+}
+```
+
+The `<enter-your-config-string-here>` is a custom string that configures your Approov account access. This will have been provided in your Approov onboarding email.
+
+## USING APPROOV FOR GRAPHQL SUBSCRIPTIONS
+
+You may also need to instantiate the `AbsintheSocket` with an additional parameter in order to support Approov in GraphQL subscriptions over web sockets:
 
 ```Dart
 _socket = AbsintheSocket(
@@ -77,78 +113,6 @@ _socket = AbsintheSocket(
       socketOptions: AbsintheSocketOptions(
           params: {"Authorization": Config.auth_token}),
     );
-```
-
-The `<enter-your-config-string-here>` is a custom string that configures your Approov account access. This will have been provided in your Approov onboarding email.
-
-### USING APPROOV HTTP CLIENT FOR GRAPHQL
-
-The last step is to use the Approov `http.Client` in your code. This is a drop in replacement for the Flutter native Http Client.
-
-So, wherever you have your `http;Client` defined, you should replace it with the drop-in Approov HttpClient:
-
-```dart
-import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
-
-http.Client client = ApproovClient('<enter-your-config-string-here>');
-```
-
-Full example code for a Phoenix Channels mobile app:
-
-```dart
-import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
-
-class PinnedHttp {
-  static String apiBaseUrl = 'YOUR_API_SERVER_BASE_URL_HERE';
-  http.Client client = ApproovClient('<enter-your-config-string-here>');
-}
-```
-
-So, wherever you have your `HttpLink` defined, you should add the `ApproovClient` to it:
-
-```dart
-import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
-
-static final approovClient = ApproovClient('<enter-your-config-string-here>');
-
-final HttpLink httpLink = HttpLink(
-    uri: apiBaseUrl,
-    httpClient: approovClient
-);
-```
-
-Full example code for a GraphQL project:
-
-```dart
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:approov_service_flutter_httpclient/approov_service_flutter_httpclient.dart';
-
-class PinnedHttp {
-  static String _userAuthToken;
-  static String apiBaseUrl = 'YOUR_API_SERVER_BASE_URL_HERE';
-  static final approovClient = ApproovClient('<enter-your-config-string-here>');
-  final HttpLink httpLink = HttpLink(
-      uri: apiBaseUrl,
-      httpClient: approovClient
-  );
-  final AuthLink authLink = AuthLink(
-    getToken: () async => _userAuthToken,
-  );
-  final Link link = authLink.concat(httpLink);
-
-  static ValueNotifier<GraphQLClient> initializeClient(String token) {
-      _userAuthToken = token;
-      ValueNotifier<GraphQLClient> client = ValueNotifier(
-        GraphQLClient(
-          cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
-          link: link,
-        ),
-      );
-      return client;
-  }
-}
 ```
 
 ## CHECKING IT WORKS
