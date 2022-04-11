@@ -97,14 +97,14 @@ Now you can go ahead and register the resulting app package with the Approov CLI
 
 For Android:
 
-```text
+```
 approov registration -add build/app/outputs/flutter-apk/app-debug.apk -expireAfter 1h
 ```
 
 For iOS it is necessary to explicitly build an `.ipa` using the command `flutter build ipa`. This will provide the path of the `.ipa` that you can then register, e.g:
 
 ```
-$ approov registration -add build/ios/ipa/app-final.ipa -expireAfter 1h
+approov registration -add build/ios/ipa/app-final.ipa -expireAfter 1h
 ```
 
 > **IMPORTANT:** During development always use the `-expireAfter` flag with an expiration that best suits your needs, using `h` for hours and `d` for days. By default, an app registration is permanent and will remain in the Approov cloud database until it is explicitly removed. Permanent app registrations should be used to identify apps that are being published to production.
@@ -124,7 +124,7 @@ The Flutter hot reload functionality doesn't write to the disk any changes made 
 
 For example:
 
-```text
+```
 approov device -add h4gubfCFzJu81j/U2BJsdg== -policy default,always-pass,all
 ```
 
