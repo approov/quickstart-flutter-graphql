@@ -8,7 +8,7 @@ Thie [Flutter](https://flutter.dev) package requires version 2.12.0 with Dart 2.
 
 ## ADDING APPROOV ENABLED FLUTTER GRAPHQL
 
-Approov Enabled Flutter GraphQL is available via [`Github`](https://github.com/approov/approov-flutter-packages.git) package. This allows inclusion into the project by simply specifying a dependency in the `pubspec.yaml` files for the app. In the `dependencies:` section of `pubspec.yaml` file add the following package reference:
+Approov Enabled Flutter GraphQL is available via a [`Github`](https://github.com/approov/approov-flutter-packages.git) package. This allows inclusion into the project by simply specifying a dependency in the `pubspec.yaml` files for the app. In the `dependencies:` section of `pubspec.yaml` file add the following package reference:
 
 ```yaml
 absinthe_socket:
