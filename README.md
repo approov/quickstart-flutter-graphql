@@ -4,7 +4,7 @@
 
 This is an Approov integration quickstart example for a mobile app built with Flutter and using GraphQL and specificaly a dart client for GraphQL subscriptions via [Absinthe](http://absinthe-graphql.org/) sockets. If you are looking for another mobile app integration you can check our list of [quickstarts](https://approov.io/docs/latest/approov-integration-examples/mobile-app/), and if you don't find what you are looking for, then please let us know [here](https://approov.io/contact). A more detailed step-by-step guide using a [Todo App](https://github.com/approov/quickstart-flutter-graphql/blob/master/TODO-APP.md) is also available.
 
-Thie [Flutter](https://flutter.dev) package requires version 2.12.0 with Dart 2.17.0. At the time of writing (8th April 2022) this is only accessible via the Flutter `beta` channel, not the `stable` channel. This is necessary because of the need to execute channel handlers on [background threads](https://docs.flutter.dev/development/platform-integration/platform-channels?tab=ios-channel-objective-c-tab#executing-channel-handlers-on-background-threads), which is only a recently added capability.
+This package requires Flutter 3 because of the need to execute channel handlers on [background threads](https://docs.flutter.dev/development/platform-integration/platform-channels?tab=ios-channel-objective-c-tab#executing-channel-handlers-on-background-threads), which is only available in the stable channel from Flutter 3.
 
 ## ADDING APPROOV ENABLED FLUTTER GRAPHQL
 
