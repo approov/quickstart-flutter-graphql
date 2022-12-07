@@ -16,12 +16,12 @@ class Dashboard extends StatelessWidget {
     return FutureBuilder<String>(
       future: sharedPreferenceService.token,
       builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) {
-        Widget children = Text('Something went wrong!');
         if (snapshot.hasError) {
-          children = Text(snapshot.error);
+          return Text('DASHBOARD SNAPSHOT ERROR: ' + snapshot.error);
         }
+
         if (snapshot.hasData) {
-          children = GraphQLProvider(
+          return GraphQLProvider(
             client: Config.initializeClient(snapshot.data),
             child: CacheProvider(
               child: DefaultTabController(
@@ -82,7 +82,7 @@ class Dashboard extends StatelessWidget {
           );
         }
 
-        return children;
+        return Text('Something went wrong!');
       },
     );
   }

@@ -60,9 +60,18 @@ class Config {
       httpClient: httpClient
   );
 
+  static Stream<Response> handleLinkException(
+      Request request,
+      NextLink forward,
+      LinkException exception,
+      ) async* {
+        print('HANDLE EXCEPTION ON GPL LINK: ' + exception.toString());
+        // TODO: Do something with it?
+  }
+
   static final AuthLink authLink = AuthLink(getToken: () => auth_token);
 
-  static final Link link = authLink.concat(httpLink);
+  static final Link link = ErrorLink(onException: handleLinkException).concat(authLink.concat(httpLink));
 
   static ValueNotifier<GraphQLClient> initializeClient(String token) {
     auth_token = token;

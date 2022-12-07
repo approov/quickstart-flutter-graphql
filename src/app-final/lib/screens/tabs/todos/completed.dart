@@ -8,8 +8,10 @@ import 'package:app_final/model/todo_item.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../../../components/utils.dart';
+
 class Completed extends StatefulWidget {
-  const Completed({Key key}) : super(key: key);
+  Completed({Key key}) : super(key: key);
 
   @override
   _CompletedState createState() => _CompletedState();
@@ -17,6 +19,23 @@ class Completed extends StatefulWidget {
 
 class _CompletedState extends State<Completed> {
   VoidCallback refetchQuery;
+
+  fetchState(context) {
+    var client = GraphQLProvider.of(context).value;
+    client.mutate(
+      MutationOptions(
+        document: gql(TodoFetch.fetchCompleted),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => fetchState(context));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,9 +43,16 @@ class _CompletedState extends State<Completed> {
         Mutation(
           options: MutationOptions(
             document: gql(TodoFetch.addTodo),
+            update: (GraphQLDataProxy cache, QueryResult result) {
+              return cache;
+            },
             onCompleted: (dynamic resultData) {
               refetchQuery();
             },
+            onError: (Exception exception) {
+              print(exception);
+              // TODO: Do something with it?
+            }
           ),
           builder: (
             RunMutation runMutation,
@@ -47,30 +73,37 @@ class _CompletedState extends State<Completed> {
             ),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
+
               if (result.hasException) {
-                return Text(result.exception.toString());
+                UtilFs.showErrorToast('No data returned from the server.', context);
+                return Text("No data available at the moment.");
               }
+
               if (result.isLoading) {
-                return Text('Loading');
+                return Center(child: CircularProgressIndicator());
               }
+
+              final List<Object> todos = result.data['completedTodos'];
+
+              refetchQuery = refetch;
+
               return ListView.builder(
-                itemCount: result.data['completedTodos'].length,
+                itemCount: todos.length,
                 itemBuilder: (context, index) {
-                  refetchQuery = refetch;
-                  dynamic responseData = result.data['completedTodos'][index];
+                  dynamic responseData = todos[index];
                   return TodoItemTile(
                     item: TodoItem.fromElements(responseData["id"],
                         responseData['title'], responseData['is_completed']),
                     toggleDocument: TodoFetch.toggleTodo,
-                    toggleRunMutaion: {
+                    toggleRunMutation: {
                       'id': responseData["id"],
                       'isCompleted': !responseData['is_completed']
                     },
                     deleteDocument: TodoFetch.deleteTodo,
-                    deleteRunMutaion: {
+                    deleteRunMutation: {
                       'id': responseData["id"],
                     },
-                    refetchQuery: refetchQuery,
+                    refetchQuery: refetch,
                   );
                 },
               );
