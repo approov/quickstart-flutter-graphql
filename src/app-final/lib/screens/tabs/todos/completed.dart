@@ -8,8 +8,6 @@ import 'package:app_final/model/todo_item.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../../components/utils.dart';
-
 class Completed extends StatefulWidget {
   Completed({Key key}) : super(key: key);
 
@@ -75,7 +73,6 @@ class _CompletedState extends State<Completed> {
                 {VoidCallback refetch, FetchMore fetchMore}) {
 
               if (result.hasException) {
-                UtilFs.showErrorToast('No data returned from the server.', context);
                 return Text("No data available at the moment.");
               }
 

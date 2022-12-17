@@ -1,7 +1,6 @@
 // @dart=2.9
 
 import 'package:absinthe_socket/absinthe_socket.dart';
-import 'package:flutter/widgets.dart';
 
 import 'client.dart';
 
