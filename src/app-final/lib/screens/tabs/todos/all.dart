@@ -49,7 +49,6 @@ class _AllState extends State<All> {
             },
             onError: (Exception exception) {
               print(exception);
-              // TODO: Do something with it?
             }
           ),
           builder: (
