@@ -25,7 +25,6 @@ class Dashboard extends StatelessWidget {
             client: Config.initializeClient(snapshot.data),
             child: CacheProvider(
               child: DefaultTabController(
-                // length: 3,
                 length: 2,
                 child: Scaffold(
                   appBar: AppBar(
@@ -50,10 +49,6 @@ class Dashboard extends StatelessWidget {
                         text: "Todos",
                         icon: new Icon(Icons.edit),
                       ),
-                      // Tab(
-                      //   text: "Feeds",
-                      //   icon: new Icon(Icons.message),
-                      // ),
                       Tab(
                         text: "Online",
                         icon: new Icon(Icons.people),
@@ -69,10 +64,6 @@ class Dashboard extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       Todos(),
-                      // Feeds(),
-                      // Container(
-                      //   child: Online(),
-                      // )
                       Online(title: "Online Users"),
                     ],
                   ),
