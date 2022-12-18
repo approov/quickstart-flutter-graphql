@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class Active extends StatefulWidget {
-  const Active({Key key}) : super(key: key);
+  Active({Key key}) : super(key: key);
 
   @override
   _ActiveState createState() => _ActiveState();
@@ -17,6 +17,22 @@ class Active extends StatefulWidget {
 
 class _ActiveState extends State<Active> {
   VoidCallback refetchQuery;
+
+  fetchState(context) {
+    var client = GraphQLProvider.of(context).value;
+    client.mutate(
+      MutationOptions(
+        document: gql(TodoFetch.fetchActive),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => fetchState(context));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +47,10 @@ class _ActiveState extends State<Active> {
             onCompleted: (dynamic resultData) {
               refetchQuery();
             },
+            onError: (Exception exception) {
+              print(exception);
+              // TODO: Do something with it?
+            }
           ),
           builder: (
             RunMutation runMutation,
@@ -51,15 +71,18 @@ class _ActiveState extends State<Active> {
             ),
             builder: (QueryResult result,
                 {VoidCallback refetch, FetchMore fetchMore}) {
-              refetchQuery = refetch;
+
               if (result.hasException) {
-                return Text(result.exception.toString());
+                return Text("No data available at the moment.");
               }
+
               if (result.isLoading) {
-                return Text('Loading');
+                return Center(child: CircularProgressIndicator());
               }
 
               final List<Object> todos = result.data['activeTodos'];
+
+              refetchQuery = refetch;
 
               return ListView.builder(
                 itemCount: todos.length,
@@ -69,12 +92,12 @@ class _ActiveState extends State<Active> {
                     item: TodoItem.fromElements(responseData["id"],
                         responseData['title'], responseData['is_completed']),
                     toggleDocument: TodoFetch.toggleTodo,
-                    toggleRunMutaion: {
+                    toggleRunMutation: {
                       'id': responseData["id"],
                       'isCompleted': !responseData['is_completed']
                     },
                     deleteDocument: TodoFetch.deleteTodo,
-                    deleteRunMutaion: {
+                    deleteRunMutation: {
                       'id': responseData["id"],
                     },
                     refetchQuery: refetch,

@@ -21,6 +21,9 @@ class Config {
     websocketProtocol = "ws";
 
     if (Platform.isAndroid) {
+      // When using a real mobile device you need to use the wifi IP address,
+      // and have the computer and the mobile device connected to it.
+      // Find your wifi IP on Linux with: ip address | grep -i wlp -
       return '10.0.2.2:8002';
     } else {
       return 'localhost:8002';
@@ -44,12 +47,12 @@ class Config {
   static final httpClient = new http.Client();
 
   // UNCOMMENT LINES BELOW IF USING APPROOV
-  /*static final httpClient = () {
-    var approovClient = ApproovClient('<enter your config here>');
-    // We use a custom header "X-Approov-Token" rather than just "Approov-Token"
-    ApproovService.setApproovHeader("X-Approov-Token", "");
-    return approovClient;
-  }();*/
+  // static final httpClient = () {
+  //   var approovClient = ApproovClient('<your config string here>');
+  //   // We use a custom header "X-Approov-Token" rather than just "Approov-Token"
+  //   ApproovService.setApproovHeader("X-Approov-Token", "");
+  //   return approovClient;
+  // }();
 
   static String get websocketUrl {
     return "${websocketProtocol}://${apiHost}/socket/websocket";
@@ -60,18 +63,28 @@ class Config {
       httpClient: httpClient
   );
 
+  static Stream<Response> handleLinkException(
+      Request request,
+      NextLink forward,
+      LinkException exception,
+      ) async* {
+        print('HANDLE EXCEPTION ON LINK: ' + exception.toString());
+  }
+
   static final AuthLink authLink = AuthLink(getToken: () => auth_token);
 
-  static final Link link = authLink.concat(httpLink);
+  static final Link link = ErrorLink(onException: handleLinkException).concat(authLink.concat(httpLink));
+
+  static GraphQLClient buildGraphQLClient() {
+    return GraphQLClient(
+      cache: GraphQLCache(),
+      link: link,
+    );
+  }
 
   static ValueNotifier<GraphQLClient> initializeClient(String token) {
     auth_token = token;
-    ValueNotifier<GraphQLClient> client = ValueNotifier(
-      GraphQLClient(
-        cache: GraphQLCache(),
-        link: link,
-      ),
-    );
+    ValueNotifier<GraphQLClient> client = ValueNotifier(buildGraphQLClient());
     return client;
   }
 }

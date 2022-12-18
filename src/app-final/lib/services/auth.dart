@@ -22,11 +22,12 @@ class HasuraAuth {
         body: jsonEncode(credentials),
       )
       .catchError((onError) {
-        print(onError);
+        print("Auth Login Error: " + onError.toString());
         return null;
       });
 
     if (response == null) {
+      print("Auth Login Error: Response is null");
       return null;
     }
 

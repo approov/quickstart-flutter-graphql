@@ -1,7 +1,9 @@
 // @dart=2.9
 
 import 'package:app_final/config/absinthe_socket.dart';
+import 'package:app_final/config/client.dart';
 import 'package:app_final/data/online_fetch.dart';
+import 'package:app_final/model/online_item.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -13,16 +15,6 @@ class Online extends StatefulWidget {
   _OnlineUsersPageState createState() => _OnlineUsersPageState();
 }
 
-class OnlineUserItem {
-  String username = "";
-  String last_seen = "";
-
-  OnlineUserItem.fromElements(String username, String last_seen) {
-    this.username = username;
-    this.last_seen = last_seen;
-  }
-}
-
 class _OnlineUsersPageState extends State<Online> {
   final notifierKey = "fetchOnlineUsers";
 
@@ -32,29 +24,44 @@ class _OnlineUsersPageState extends State<Online> {
 
   @override
   void initState() {
-    Absinthe.connect();
-    _subscribeToOnlineUsers();
-
     super.initState();
+    _fetchOnlineUsers();
+    _subscribeToOnlineUsers();
+  }
+
+  void _fetchOnlineUsers() {
+    var client = Config.buildGraphQLClient();
+
+    var result = client.query(QueryOptions(document: gql(OnlineFetch.fetchOnlineUsers)));
+
+     result.then((payload) {
+       if (mounted == true && payload != null) {
+         setState(() {
+           onlineUsers = OnlineUserItem.fromResponse(payload);
+         });
+       }
+     });
   }
 
   _subscribeToOnlineUsers() async {
+    Absinthe.connect();
+
     return Absinthe.subscribe(
       this.notifierKey,
-      OnlineFetch.fetchUsers,
+      OnlineFetch.subscribeOnlineUsers,
       onResult: (payload) async {
 
-        if (payload != null) {
+        if (mounted == true && payload != null) {
           setState(() {
             onlineUsers[payload['data']['fetchOnlineUsers']['name']] = payload['data']['fetchOnlineUsers']['last_seen'];
           });
         }
       },
       onError: (error) {
-        print('Error ----> $error');
+        print('---> GraphQL Subscription Error: $error');
       },
       onCancel: () {
-        print("cancelled subscription");
+        print("---> GraphQL Subscription cancelled");
       },
     );
   }
@@ -77,9 +84,9 @@ class _OnlineUsersPageState extends State<Online> {
                     child: Column(
                       children: <Widget>[
                         ListTile(
-                            leading: Icon(Icons.person),
-                            title: Text(onlineUserIter.elementAt(index).key),
-                            subtitle: Text("Last seen: " + onlineUserIter.elementAt(index).value),
+                          leading: Icon(Icons.person),
+                          title: Text(onlineUserIter.elementAt(index).key),
+                          subtitle: Text("Last seen: " + onlineUserIter.elementAt(index).value),
                         ),
                       ],
                     ));

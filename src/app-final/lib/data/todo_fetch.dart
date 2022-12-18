@@ -40,7 +40,7 @@ class TodoFetch {
   """;
 
   static String toggleTodo = """
-    mutation toggleTodo(\$id: Integer!, \$isCompleted: Boolean!) {
+    mutation toggleTodo(\$id: Int!, \$isCompleted: Boolean!) {
       toggleTodo(id: \$id, isCompleted: \$isCompleted) {
         isCompleted
       }

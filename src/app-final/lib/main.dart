@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       "/signup": (BuildContext context) => Signup(),
     };
     return MaterialApp(
-      title: 'Hasura GraphQL Demo',
+      title: 'Approov GraphQL Demo',
       theme: ThemeData(primaryColor: Colors.black),
       routes: routes,
       home: Splash(),

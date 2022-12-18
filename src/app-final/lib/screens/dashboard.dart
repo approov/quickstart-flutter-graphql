@@ -16,16 +16,15 @@ class Dashboard extends StatelessWidget {
     return FutureBuilder<String>(
       future: sharedPreferenceService.token,
       builder: (BuildContext ctx, AsyncSnapshot<String> snapshot) {
-        Widget children = Text('Something went wrong!');
         if (snapshot.hasError) {
-          children = Text(snapshot.error);
+          return Text('DASHBOARD SNAPSHOT ERROR: ' + snapshot.error);
         }
+
         if (snapshot.hasData) {
-          children = GraphQLProvider(
+          return GraphQLProvider(
             client: Config.initializeClient(snapshot.data),
             child: CacheProvider(
               child: DefaultTabController(
-                // length: 3,
                 length: 2,
                 child: Scaffold(
                   appBar: AppBar(
@@ -50,10 +49,6 @@ class Dashboard extends StatelessWidget {
                         text: "Todos",
                         icon: new Icon(Icons.edit),
                       ),
-                      // Tab(
-                      //   text: "Feeds",
-                      //   icon: new Icon(Icons.message),
-                      // ),
                       Tab(
                         text: "Online",
                         icon: new Icon(Icons.people),
@@ -69,10 +64,6 @@ class Dashboard extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       Todos(),
-                      // Feeds(),
-                      // Container(
-                      //   child: Online(),
-                      // )
                       Online(title: "Online Users"),
                     ],
                   ),
@@ -82,7 +73,7 @@ class Dashboard extends StatelessWidget {
           );
         }
 
-        return children;
+        return Text('Something went wrong!');
       },
     );
   }
