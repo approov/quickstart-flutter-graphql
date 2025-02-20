@@ -4,8 +4,6 @@
 
 This is an Approov integration quickstart for using Flutter with GraphQL, specifically a Dart client for GraphQL subscriptions via [Absinthe](http://absinthe-graphql.org/) sockets. Additionally, a step-by-step tutorial guide using a [Todo App](https://github.com/approov/quickstart-flutter-graphql/blob/master/TODO-APP.md) is also available.
 
-This package requires Flutter 3 because of the need to execute channel handlers on [background threads](https://docs.flutter.dev/development/platform-integration/platform-channels?tab=ios-channel-objective-c-tab#executing-channel-handlers-on-background-threads), which is only available in the stable channel from Flutter 3.
-
 Note that the minimum OS requirement for iOS is 12 and for Android the minimum SDK version is 21 (Android 5.0). You cannot use Approov in apps that need to support OS versions older than this.
 
 ## ADDING APPROOV ENABLED FLUTTER GRAPHQL
